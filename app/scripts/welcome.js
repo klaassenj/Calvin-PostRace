@@ -25,10 +25,10 @@ module.exports = React.createClass({
             <div>
                 <h1> Welcome to Calvin Post Race Analysis! </h1>
                 <div class="topnav">
-                  <a class="active" href="#home">Home</a>
-                  <a href="#news">News</a>
-                  <a href="#contact">Contact</a>
-                  <a href="#about">About</a>
+                  <a class="active" href="analysis">Analysis</a>
+                  <a href="pastraces">Past Races</a>
+                  <a href="runners">Runners</a>
+                  <a href="about">About</a>
                 </div>
             </div>
             );
