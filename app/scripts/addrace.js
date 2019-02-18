@@ -23,14 +23,8 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div>
-                <h1> Welcome to Calvin Post Race Analysis! </h1>
-                <div class="topnav">
-                  <a class="active" href="#home">Home</a>
-                  <a href="#news">News</a>
-                  <a href="#contact">Contact</a>
-                  <a href="#about">About</a>
-                </div>
+                Welcome to the Analysis Form!
             </div>
-            );
+        );
     }
 });

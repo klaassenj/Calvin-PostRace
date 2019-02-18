@@ -11,7 +11,6 @@ module.exports = React.createClass({
     },
     componentDidMount: function() {
         this.state._isMounted = true;
-        setInterval(this.loadCommentsFromServer, POLL_INTERVAL);
     },
     componentWillUnmount: function() {
         // Reset the isMounted flag so that the loadCommentsFromServer callback
