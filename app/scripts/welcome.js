@@ -3,6 +3,7 @@ import $ from 'jquery';
 
 import CommentList from './commentList';
 import CommentForm from './commentForm';
+import TopNav from './topnav'
 import { API_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
@@ -24,12 +25,7 @@ module.exports = React.createClass({
         return (
             <div>
                 <h1> Welcome to Calvin Post Race Analysis! </h1>
-                <div class="topnav">
-                  <a class="active" href="analysis">Analysis</a>
-                  <a href="pastraces">Past Races</a>
-                  <a href="runners">Runners</a>
-                  <a href="about">About</a>
-                </div>
+                <TopNav></TopNav>
             </div>
             );
     }

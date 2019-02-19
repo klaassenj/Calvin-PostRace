@@ -38,6 +38,7 @@
     "stop": "kill $(pgrep node)",
     "dev": "nodemon --ignore app/ server.js & webpack-dev-server --progress &",
     "install": "webpack --progress --config ./webpack.production.config.js",
+    "launch": "npm run-script build & npm start",
     "start": "node server.js"
   }
 }

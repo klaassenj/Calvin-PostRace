@@ -17,11 +17,12 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient;
 
 // This assumes that the MongoDB password has been set as an environment variable.
-var username = 'cs336';
+//mongodb://<dbuser>:<dbpassword>@ds141815.mlab.com:41815/calvinpostrace
+var username = 'admin';
 var password = process.env.MONGO_PASSWORD;
-var host = 'ds145667.mlab.com'
-var port = '45667'
-var database = 'cs336'
+var host = 'ds141815.mlab.com'
+var port = '41815'
+var database = 'calvinpostrace'
 var connectionString = `mongodb://${username}:${password}@${host}:${port}/${database}`;
 MongoClient.connect(connectionString, function(err, dbConnection) {
     if (err) throw err;
@@ -43,61 +44,68 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get('/api/comments', function(req, res) {
-    db.collection("comments").find({}).toArray(function(err, docs) {
-        if (err) throw err;
+app.get('/api/races', function(req, res) {
+    db.collection("races").find({}).toArray(function(err, docs) {
+        if(err) throw err;
         res.json(docs);
-    });
+    })
 });
 
-app.post('/api/comments', function(req, res) {
-    var newComment = {
-        id: Date.now(),
-        author: req.body.author,
-        text: req.body.text,
-    };
-    db.collection("comments").insertOne(newComment, function(err, result) {
-        if (err) throw err;
-        db.collection("comments").find({}).toArray(function(err, docs) {
-            if (err) throw err;
-            res.json(docs);
-        });
-    });
-});
+// app.get('/api/comments', function(req, res) {
+//     db.collection("comments").find({}).toArray(function(err, docs) {
+//         if (err) throw err;
+//         res.json(docs);
+//     });
+// });
 
-app.get('/api/comments/:id', function(req, res) {
-    db.collection("comments").find({"id": Number(req.params.id)}).toArray(function(err, docs) {
-        if (err) throw err;
-        res.json(docs);
-    });
-});
+// app.post('/api/comments', function(req, res) {
+//     var newComment = {
+//         id: Date.now(),
+//         author: req.body.author,
+//         text: req.body.text,
+//     };
+//     db.collection("comments").insertOne(newComment, function(err, result) {
+//         if (err) throw err;
+//         db.collection("comments").find({}).toArray(function(err, docs) {
+//             if (err) throw err;
+//             res.json(docs);
+//         });
+//     });
+// });
 
-app.put('/api/comments/:id', function(req, res) {
-    var updateId = Number(req.params.id);
-    var update = req.body;
-    db.collection('comments').updateOne(
-        { id: updateId },
-        { $set: update },
-        function(err, result) {
-            if (err) throw err;
-            db.collection("comments").find({}).toArray(function(err, docs) {
-                if (err) throw err;
-                res.json(docs);
-            });
-        });
-});
+// app.get('/api/comments/:id', function(req, res) {
+//     db.collection("comments").find({"id": Number(req.params.id)}).toArray(function(err, docs) {
+//         if (err) throw err;
+//         res.json(docs);
+//     });
+// });
 
-app.delete('/api/comments/:id', function(req, res) {
-    db.collection("comments").deleteOne(
-        {'id': Number(req.params.id)},
-        function(err, result) {
-            if (err) throw err;
-            db.collection("comments").find({}).toArray(function(err, docs) {
-                if (err) throw err;
-                res.json(docs);
-            });
-        });
-});
+// app.put('/api/comments/:id', function(req, res) {
+//     var updateId = Number(req.params.id);
+//     var update = req.body;
+//     db.collection('comments').updateOne(
+//         { id: updateId },
+//         { $set: update },
+//         function(err, result) {
+//             if (err) throw err;
+//             db.collection("comments").find({}).toArray(function(err, docs) {
+//                 if (err) throw err;
+//                 res.json(docs);
+//             });
+//         });
+// });
+
+// app.delete('/api/comments/:id', function(req, res) {
+//     db.collection("comments").deleteOne(
+//         {'id': Number(req.params.id)},
+//         function(err, result) {
+//             if (err) throw err;
+//             db.collection("comments").find({}).toArray(function(err, docs) {
+//                 if (err) throw err;
+//                 res.json(docs);
+//             });
+//         });
+// });
 
 app.use('*', express.static(APP_PATH));
 
