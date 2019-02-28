@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-
 import CommentList from './commentList';
 import CommentForm from './commentForm';
 import TopNav from './topnav'

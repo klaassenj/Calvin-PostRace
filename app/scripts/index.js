@@ -6,7 +6,6 @@ import $ from 'jquery';
 import { Router, Route, browserHistory } from 'react-router';
 
 import '../css/base.css';
-import '../css/menunav.css';
 
 import CommentBox from './commentBox';
 import CommentEdit from './commentEdit';

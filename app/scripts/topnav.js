@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import '../css/base.css'
 import { Router, Route, browserHistory } from 'react-router';
 module.exports = React.createClass({
 	
@@ -45,7 +46,7 @@ module.exports = React.createClass({
 		});
         return (
             <div>
-                <div class="topnav">
+                <div className="topnav">
                   {MenuItems}
                 </div>
             </div>

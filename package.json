@@ -1,8 +1,8 @@
 {
-  "name": "unit13-router",
-  "author": "kvlinden",
-  "version": "0.0.0",
-  "description": "Router-enhanced version of the Facebook tutorial",
+  "name": "calvinpostrace",
+  "author": "jklaassen",
+  "version": "0.0.1",
+  "description": "Save thoughts on races for Calvin XCTF",
   "license": "ISC",
   "main": "server.js",
   "dependencies": {
@@ -16,6 +16,7 @@
     "css-loader": "^0.25.0",
     "express": "^4.4.5",
     "extract-text-webpack-plugin": "^1.0.1",
+    "flexbox": "0.0.3",
     "html-webpack-plugin": "^2.24.0",
     "jquery": "^3.1.1",
     "jquery-ui": "^1.12.1",
@@ -36,9 +37,9 @@
   "scripts": {
     "build": "webpack --progress",
     "stop": "kill $(pgrep node)",
-    "dev": "nodemon --ignore app/ server.js & webpack-dev-server --progress &",
-    "install": "webpack --progress --config ./webpack.production.config.js",
-    "launch": "npm run-script build & npm start",
-    "start": "node server.js"
+    "dev": "nodemon --ignore app/ server.js & webpack-dev-server -d --progress &",
+    "install": "webpack --progress --config ./webpack.config.js",
+    "start": "node server.js",
+    "launch": "npm run build & npm start"
   }
 }
