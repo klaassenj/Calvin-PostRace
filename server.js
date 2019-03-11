@@ -25,10 +25,10 @@ var tictactoeDB = null;
 var mclient = require('mongodb').MongoClient
 
 // Connect to Mongo Database
-mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
-    if (err) throw err
-    tictactoeDB = client.db(database);
-})
+// mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
+//     if (err) throw err
+//     tictactoeDB = client.db(database);
+// })
 
 // Set up Body Parser
 var db;

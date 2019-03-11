@@ -14,6 +14,8 @@ import PastRaces from './pastraces'
 import AddRace from './addrace'
 import Runners from './runners'
 import About from './about';
+import Help from './help';
+import Race from './race';
 import { API_URL, POLL_INTERVAL } from './global';
 
 ReactDOM.render((
@@ -23,6 +25,8 @@ ReactDOM.render((
 		<Route path="/analysis" component={AddRace} />
 		<Route path="/runners" component={Runners} />
 		<Route path="/about" component={About} />
+		<Route path="/help" component={Help} />
+		<Route path="/race" component={ Race } />
 		
 	</Router>
     ),

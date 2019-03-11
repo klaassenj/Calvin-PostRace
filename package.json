@@ -1,7 +1,7 @@
 {
   "name": "calvinpostrace",
   "author": "jklaassen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Save thoughts on races for Calvin XCTF",
   "license": "ISC",
   "main": "server.js",
@@ -40,6 +40,8 @@
     "dev": "nodemon --ignore app/ server.js & webpack-dev-server -d --progress &",
     "install": "webpack --progress --config ./webpack.config.js",
     "start": "node server.js",
-    "launch": "npm run build & npm start"
-  }
+    "launch": "npm run build & npm start",
+    "heroku-postbuild": "echo Skip build on Heroku"
+  },
+  "heroku-run-build-script": true
 }

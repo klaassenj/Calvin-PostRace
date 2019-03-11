@@ -8,7 +8,11 @@ module.exports = React.createClass({
         return {author: '', text: ''};
     },
     getMenuItems: function() {
-    	return [ 
+    	return [
+            {
+                navItem: "Home",
+                route:""
+            }, 
         	{
         		navItem: "Analysis",
         		route: "analysis"
@@ -29,6 +33,11 @@ module.exports = React.createClass({
         		route: "about"
         	},
 
+            {
+                navItem: "Help",
+                route: "help"
+            },
+
         	];
     },
     componentDidMount: function () {
@@ -37,7 +46,9 @@ module.exports = React.createClass({
     },
 
     navigate: function(route) {
-    	browserHistory.push(route);
+        browserHistory.push({
+            pathname:"/" + route,
+        });
     },
 
 	render: function() {

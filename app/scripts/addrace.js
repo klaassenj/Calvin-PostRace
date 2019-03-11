@@ -21,40 +21,31 @@ module.exports = React.createClass({
     handleMeetChange: function(e) {
         this.setState({meet: e.target.value});
     },
-    handleGeneralThoughtsChange: function(e) {
+    handleThoughtsChange: function(e) {
         this.setState({thoughts: e.target.value});
     },
     handlePositivesChange: function(e) {
-
+        this.setState({positives: e.target.value});
     },
     handleGoalChange: function(e) {
-
+        this.setState({goal: e.target.value});
     },
     handleAttitudeChange: function(e) {
-
+        this.setState({attitude: e.target.value});
     },
     handleEffortChange: function(e) {
-
+        this.setState({effort: e.target.value});
     },
     handleSubmit: function(e) {
         e.preventDefault();
-        var author = this.state.author.trim();
-        var text = this.state.text.trim();
-        if (!text || !author) {
-            return;
-        }
-        this.props.onAnalysisSubmit({author: author, text: text});
-        this.setState(
-            {author: '', 
-            text: ''
-        });
+        //AJAX Call
     },
     render: function() {
         return (
             <div>
-                <h1>Welcome to the Analysis Form!</h1>
-                <TopNav></TopNav>
-                <form className="analysisForm" onSubmit={this.handleSubmit}>
+            <h1>Welcome to the Analysis Form!</h1>
+            <TopNav></TopNav>
+            <form className="analysisForm" onSubmit={this.handleSubmit}>
                 <input
                     id="name"
                     type="text"
@@ -69,11 +60,60 @@ module.exports = React.createClass({
                     value={this.state.meet}
                     onChange={this.handleMeetChange}
                 />
+                <textarea
+                    id="thoughts"
+                    type="text"
+                    placeholder="General thoughts about the race"
+                    value={this.state.thoughts}
+                    rows="10"
+                    onChange={this.handleThoughtsChange}
+                />
+                <textarea
+                    id="positives"
+                    type="text"
+                    placeholder="Two positives and something to work on"
+                    value={this.state.positives}
+                    rows="10"
+                    onChange={this.handlePositivesChange}
+                />
+                <textarea
+                    id="goal"
+                    type="text"
+                    placeholder="Did you achieve what you set out to do? Was the goal realistic?"
+                    value={this.state.goal}
+                    rows="10"
+                    onChange={this.handleGoalChange}
+                />
+                <input
+                    id="attitude"
+                    type="text" 
+                    min="1" 
+                    max="10"
+                    placeholder="Attitude (1-10)"
+                    value={this.state.attitude}
+                    onChange={this.handleAttitudeChange}
+                />
+                <input
+                    id="effort"
+                    type="text"
+                    min="1" 
+                    max="10"
+                    placeholder="Effort (1-10)"
+                    value={this.state.effort}
+                    onChange={this.handleEffortChange}
+                />
+                
+                
                 <input type="submit" value="Post" />
             </form>
             <p>{this.state.name}</p>
             <p>{this.state.meet}</p>
+            <p>{this.state.thoughts}</p>
+            <p>{this.state.positives}</p>
+            <p>{this.state.goal}</p>
+            <p>{this.state.attitude}</p>
+            <p>{this.state.effort}</p>
             </div>
-        );
-    }
-});
+            );
+        }
+    });

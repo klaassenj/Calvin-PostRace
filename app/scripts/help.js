@@ -1,7 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-import CommentList from './commentList';
-import CommentForm from './commentForm';
 import TopNav from './topnav'
 import { API_URL, POLL_INTERVAL } from './global';
 
@@ -25,8 +23,10 @@ module.exports = React.createClass({
             <div>
                 <h1> Welcome to Calvin Post Race Analysis! </h1>
                 <TopNav></TopNav>
-                
+                <p> Click the Analysis tab to enter race information </p>
+                <p> Race Archives shows the most recent races</p>
             </div>
             );
     }
 });
+

@@ -87,18 +87,40 @@ ul {
   color: white;
 }
 
-form input {
+form input, textarea {
   padding: 15px;
   margin: 20px;
   display: inline;
   
   display: flex;
   flex-direction: column;
+  flex-flow: column wrap;
 }
 
 .container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-flow: column wrap;
+  align-items: left;
+}
+
+textarea {
+  border: 2px;
+  border-style: bold;
+}
+
+#thoughts, #positives {
+  height: auto;
+  width: 300px;
+  border: 2px;
+}
+
+#name, #meet {
+  width: 300px;
+}
+
+input {
+  width: auto;
 }
 
 
