@@ -42,7 +42,27 @@ module.exports = React.createClass({
     },
     handleSubmit: function(e) {
         e.preventDefault();
-        //AJAX Call
+        var race = { name : this.state.name, 
+                     meet : this.state.meet,
+                     event : this.state.event,
+                     thoughts : this.state.thoughts,
+                     positives : this.state.positives,
+                     goal : this.state.goal,
+                     attitude : this.state.attitude,
+                     effort : this.state.effort
+                 };
+        $.ajax({
+            url: API_URL,
+            dataType: 'json',
+            type: 'POST',
+            data: race,
+        })
+         .done(function(result){
+             console.log(result);
+         }.bind(this))
+         .fail(function(xhr, status, errorThrown) {
+             console.error(API_URL, status, errorThrown.toString());
+         }.bind(this));
     },
     getEventChoices: function() {
         //AJAX Call

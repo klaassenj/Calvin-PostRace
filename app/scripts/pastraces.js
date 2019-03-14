@@ -9,7 +9,7 @@ import { API_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
     getInitialState: function() {
-        return {data: [], _isMounted: false, selectedRace: null, races: null};
+        return {analysis: [], _isMounted: false, selectedRace: null, races: null};
     },
     componentDidMount: function() {
         this.state._isMounted = true;
@@ -17,6 +17,20 @@ module.exports = React.createClass({
     componentWillUnmount: function() {
         this.state._isMounted = false;
     },
+    loadAnalysisFromServer : function() {
+        $.ajax({
+                url: API_URL,
+                dataType: 'json',
+                cache: false,
+        })
+        .done(function (result) {
+            this.setState({analysis: result});
+            console.log("Content Loaded.");
+        }.bind(this))
+        .fail(function (xhr, status, errorThrown) {
+            console.error(API_URL, status, errorThrown.toString());
+        }.bind(this));
+    }
     getRaces: function() {
         return [
             {
@@ -30,31 +44,6 @@ module.exports = React.createClass({
                 runners: [ "Addison", "Jamo", "Micah", "Jon"]
             }
             ];
-    },
-    getAnalysis: function() {
-        return [
-            {
-                id: "a",
-                meet: "MIAA",
-                event: "5k",
-                name: "Micah",
-                thoughts: "I ran really smart. I HATE Jack Beakas",
-                positives: "I kicked really frickin hard. Dursted some people.",
-                goal: "Almost got 4th.",
-                attitude: "9.95",
-                effort: "9.95"
-            },
-            {
-                id: "b",
-                meet: "MIAA 5k",
-                name: "Jon",
-                thoughts: "Lorem Ipsum",
-                positives: "Positives",
-                goal: "Almost got 1st.",
-                attitude: "10",
-                effort: "10"
-            },
-        ];
     },
     expand : function(id) {
         console.log(id);
@@ -72,7 +61,7 @@ module.exports = React.createClass({
         //AJAX Request to Database searching for a meet like race and a runner name
         // Save the returned data
         //.then (
-        var data = this.getAnalysis().filter(analysis => analysis.name == runner);
+        var data = this.state.analysis.filter(analysis => analysis.name == runner);
         console.log("State Data from PastRaces:")
         console.log(data);
         if (data.length > 0) {

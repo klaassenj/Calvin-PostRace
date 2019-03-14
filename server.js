@@ -47,8 +47,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 //Create Endpoints
 
 // GET - /api/usernames/
-app.get('/api/usernames', function(req, res) {
-    var usernamesList = tictactoeDB.collection('usernames').find({}).toArray((err, result) => {
+app.get('/api/races', function(req, res) {
+    var usernamesList = tictactoeDB.collection('races').find({}).toArray((err, result) => {
         if(err) throw err;
         res.json(result);
     });
@@ -99,20 +99,12 @@ app.get('/api/moves', function(req, res) {
 });
 
 // POST - /api/usernames/
-app.post('/api/usernames', function(req, res, next) {
-    tictactoeDB.collection('usernames').find({username: req.body.username}).toArray((err, result) => {
-        if (err) throw err
-        if(result === undefined || result.length == 0) {
-            tictactoeDB.collection('usernames').insert({
-                username: req.body.username,
-            });
-            res.statusCode = 200;
-            res.send({result: "Success"});
-        } else {
-            res.statusCode = 403;
-            next(new Error("Username Taken"));
-        }
-    })
+app.post('/api/races', function(req, res, next) {
+    tictactoeDB.collection('usernames').insert({
+        username: req.body.username,
+    });
+    res.statusCode = 200;
+    res.send({result: "Success"});
 });
 
 // POST - /api/challenges/
