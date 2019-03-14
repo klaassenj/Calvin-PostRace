@@ -6,6 +6,7 @@ import TopNav from './topnav'
 import { API_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
+
     getInitialState: function() {
         return {data: [], _isMounted: false};
     },
@@ -20,6 +21,9 @@ module.exports = React.createClass({
     },
     handleMeetChange: function(e) {
         this.setState({meet: e.target.value});
+    },
+    handleEventChange: function(e) {
+        this.setState({event: e.target.value});
     },
     handleThoughtsChange: function(e) {
         this.setState({thoughts: e.target.value});
@@ -40,7 +44,18 @@ module.exports = React.createClass({
         e.preventDefault();
         //AJAX Call
     },
+    getEventChoices: function() {
+        //AJAX Call
+        var events = [
+            "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile"
+        ]
+
+        return events.map(event => {
+            return (<option value = { event }> { event } </option>)
+        });
+    },
     render: function() {
+
         return (
             <div>
             <h1>Welcome to the Analysis Form!</h1>
@@ -53,13 +68,18 @@ module.exports = React.createClass({
                     value={this.state.name}
                     onChange={this.handleNameChange}
                 />
+                
                 <input
                     id="meet"
                     type="text"
-                    placeholder="Meet and Event"
+                    placeholder="Meet"
                     value={this.state.meet}
                     onChange={this.handleMeetChange}
                 />
+                <p> Main Event </p>
+                <select name = "dropdown" onChange={this.handleEventChange}>
+                    { this.getEventChoices() }
+                </select>
                 <textarea
                     id="thoughts"
                     type="text"
@@ -108,6 +128,7 @@ module.exports = React.createClass({
             </form>
             <p>{this.state.name}</p>
             <p>{this.state.meet}</p>
+            <p>{this.state.event}</p>
             <p>{this.state.thoughts}</p>
             <p>{this.state.positives}</p>
             <p>{this.state.goal}</p>

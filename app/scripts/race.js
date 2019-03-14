@@ -21,7 +21,7 @@ module.exports = React.createClass({
     },
 
 	render: function() {
-		var MeetAndEvent = (<p id="meet"> { this.state.meet}</p>);
+		var MeetAndEvent = (<p id="meet"> { this.state.meet} { this.state.event }</p>);
         var Name = (<p id="name"> {this.state.name}</p>);
         var Thoughts = (<p id="thoughts"> {this.state.thoughts}</p>)
         var Positives = (<p id="positives"> {this.state.positives}</p>)

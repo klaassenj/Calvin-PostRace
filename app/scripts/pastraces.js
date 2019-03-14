@@ -35,7 +35,8 @@ module.exports = React.createClass({
         return [
             {
                 id: "a",
-                meet: "MIAA 5k",
+                meet: "MIAA",
+                event: "5k",
                 name: "Micah",
                 thoughts: "I ran really smart. I HATE Jack Beakas",
                 positives: "I kicked really frickin hard. Dursted some people.",
@@ -74,10 +75,15 @@ module.exports = React.createClass({
         var data = this.getAnalysis().filter(analysis => analysis.name == runner);
         console.log("State Data from PastRaces:")
         console.log(data);
-        browserHistory.push({
-            pathname: "/race",
-            state: { data: data }
-        });
+        if (data.length > 0) {
+            browserHistory.push({
+                pathname: "/race",
+                state: { data: data }
+            });
+        } else {
+            alert("No Data for " + runner + " at " + race);
+        }
+        
         
     },
     createHTML: function() {

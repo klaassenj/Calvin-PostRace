@@ -8,6 +8,11 @@
  * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+
+
  */
 
 //Load Libraries
@@ -16,19 +21,20 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 // MongoDB variables
-var username = 'cs336'
+var username = 'admin'
 var password = process.env.MONGO_PASSWORD
-var host = 'ds119273.mlab.com'
-var port = '19273'
-var database = 'tic-tac-toe'
-var tictactoeDB = null;
+var host = 'ds141815.mlab.com'
+var port = '41815'
+var database = 'calvinpostrace'
+var postraceDB = null;
 var mclient = require('mongodb').MongoClient
 
-// Connect to Mongo Database
-// mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
-//     if (err) throw err
-//     tictactoeDB = client.db(database);
-// })
+//Connect to Mongo Database
+mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
+    if (err) throw err
+    postraceDB = client.db(database);
+    console.log("Connected Successfully to MongoDB.")
+});
 
 // Set up Body Parser
 var db;
@@ -180,4 +186,4 @@ app.use('*', express.static(APP_PATH));
 // Launch Server
 app.listen(app.get('port'), function() {
         console.log('Server started: http://localhost:' + app.get('port') + '/');
-    });
+});
