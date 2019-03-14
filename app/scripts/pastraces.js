@@ -13,6 +13,7 @@ module.exports = React.createClass({
     },
     componentDidMount: function() {
         this.state._isMounted = true;
+        loadAnalysisFromServer();
     },
     componentWillUnmount: function() {
         this.state._isMounted = false;
@@ -21,11 +22,12 @@ module.exports = React.createClass({
         $.ajax({
                 url: API_URL,
                 dataType: 'json',
-                cache: false,
+                cache: false
         })
         .done(function (result) {
             this.setState({analysis: result});
             console.log("Content Loaded.");
+            console.log(this.state.analysis)
         }.bind(this))
         .fail(function (xhr, status, errorThrown) {
             console.error(API_URL, status, errorThrown.toString());

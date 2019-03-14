@@ -61,7 +61,7 @@ module.exports = React.createClass({
              console.log(result);
          }.bind(this))
          .fail(function(xhr, status, errorThrown) {
-             console.error(API_URL, status, errorThrown.toString());
+             console.error(xAPI_URL, status, errorThrown.toString());
          }.bind(this));
     },
     getEventChoices: function() {
