@@ -30,7 +30,7 @@ module.exports = React.createClass({
         .fail(function (xhr, status, errorThrown) {
             console.error(API_URL, status, errorThrown.toString());
         }.bind(this));
-    }
+    },
     getRaces: function() {
         return [
             {
