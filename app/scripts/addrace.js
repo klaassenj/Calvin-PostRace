@@ -84,7 +84,7 @@ module.exports = React.createClass({
                 <input
                     id="name"
                     type="text"
-                    placeholder="First and Last Name"
+                    placeholder="Name"
                     value={this.state.name}
                     onChange={this.handleNameChange}
                 />

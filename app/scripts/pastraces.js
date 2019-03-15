@@ -61,17 +61,16 @@ module.exports = React.createClass({
         this.setState({races : this.createHTML()});
 
     },
-    navigate : function(race, runner) {
+    navigate : function(analysis) {
         //AJAX Request to Database searching for a meet like race and a runner name
         // Save the returned data
         //.then (
-        var data = this.state.analysis.filter(analysis => analysis.name == runner);
-        console.log("State Data from PastRaces:")
-        console.log(data);
+        console.log("State Data from PastRaces:");
+        console.log(analysis);
         if (data.length > 0) {
             browserHistory.push({
                 pathname: "/race",
-                state: { data: data }
+                state: { data: analysis }
             });
         } else {
             alert("No Data for " + runner + " at " + race);
@@ -80,6 +79,10 @@ module.exports = React.createClass({
         
     },
     createHTML: function() {
+        return this.state.analysis.map(analysis => {
+            return (<a key=analysis.name onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);
+        });
+        /*
         return this.getRaces().map(race => {
             if(race.id == this.state.selectedRace) {
                 var Runners = race.runners.map(runner => {
@@ -91,6 +94,7 @@ module.exports = React.createClass({
             }
             
         });
+        */
     },
     render: function() {
         this.state.races = this.createHTML();
