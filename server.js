@@ -100,9 +100,7 @@ app.get('/api/moves', function(req, res) {
 
 // POST - /api/usernames/
 app.post('/api/races', function(req, res, next) {
-    postraceDB.collection('usernames').insert({
-        username: req.body.username,
-    });
+    postraceDB.collection('races').insert(req.body);
     res.statusCode = 200;
     res.send({result: "Success"});
 });
