@@ -41,7 +41,7 @@ module.exports = React.createClass({
                 id: "bigmeet",
                 name: "Big Meet",
                 runners: [ "Jon", "Charlie", "Caleb"]
-            }, 
+            },
             {
                 id: "miaaindoors",
                 name: "MIAA Indoor Conference",
@@ -52,11 +52,11 @@ module.exports = React.createClass({
     expand : function(id) {
         console.log(id);
         if(this.state.selectedRace != id) {
-            this.state.selectedRace = id;    
+            this.state.selectedRace = id;
         } else {
             this.state.selectedRace = null;
         }
-        
+
         console.log(this.state)
         this.setState({races : this.createHTML()});
 
@@ -75,12 +75,12 @@ module.exports = React.createClass({
         } else {
             alert("No Data for " + runner + " at " + race);
         }
-        
-        
+
+
     },
     createHTML: function() {
         return this.state.analysis.map(analysis => {
-            return (<a key=analysis.name onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);
+            return (<a key= { analysis.name } onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);
         });
         /*
         return this.getRaces().map(race => {
@@ -90,9 +90,9 @@ module.exports = React.createClass({
                 });
                 return (<div className="container racebox"><p id="raceTitle">{ race.name }</p> {Runners} </div>);
             } else {
-                return(<a key={race.id} onClick={() => this.expand(race.id)}>{race.name}</a>);    
+                return(<a key={race.id} onClick={() => this.expand(race.id)}>{race.name}</a>);
             }
-            
+
         });
         */
     },
