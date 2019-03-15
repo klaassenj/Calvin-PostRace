@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // GET - /api/usernames/
 app.get('/api/races', function(req, res) {
-    var usernamesList = tictactoeDB.collection('races').find({}).toArray((err, result) => {
+    var usernamesList = postraceDB.collection('races').find({}).toArray((err, result) => {
         if(err) throw err;
         res.json(result);
     });
@@ -100,7 +100,7 @@ app.get('/api/moves', function(req, res) {
 
 // POST - /api/usernames/
 app.post('/api/races', function(req, res, next) {
-    tictactoeDB.collection('usernames').insert({
+    postraceDB.collection('usernames').insert({
         username: req.body.username,
     });
     res.statusCode = 200;
