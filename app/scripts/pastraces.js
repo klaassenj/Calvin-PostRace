@@ -13,25 +13,27 @@ module.exports = React.createClass({
     },
     componentDidMount: function() {
         this.state._isMounted = true;
-        loadAnalysisFromServer();
+        this.loadAnalysisFromServer();
     },
     componentWillUnmount: function() {
         this.state._isMounted = false;
     },
     loadAnalysisFromServer : function() {
-        $.ajax({
-                url: API_URL,
-                dataType: 'json',
-                cache: false
-        })
-        .done(function (result) {
-            this.setState({analysis: result});
-            console.log("Content Loaded.");
-            console.log(this.state.analysis)
-        }.bind(this))
-        .fail(function (xhr, status, errorThrown) {
-            console.error(API_URL, status, errorThrown.toString());
-        }.bind(this));
+        if (this.state._isMounted) {
+            $.ajax({
+                    url: "/api/races",
+                    dataType: 'json',
+                    cache: false
+            })
+            .done(function (result) {
+                this.setState({analysis: result});
+                console.log("Content Loaded.");
+                console.log(this.state.analysis)
+            }.bind(this))
+            .fail(function (xhr, status, errorThrown) {
+                console.error(API_URL, status, errorThrown.toString());
+            }.bind(this));
+        }
     },
     getRaces: function() {
         return [
