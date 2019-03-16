@@ -67,13 +67,13 @@ module.exports = React.createClass({
         //.then (
         console.log("State Data from PastRaces:");
         console.log(analysis);
-        if (data.length > 0) {
+        if (analysis != undefined && analysis != null) {
             browserHistory.push({
                 pathname: "/race",
                 state: { data: analysis }
             });
         } else {
-            alert("No Data for " + runner + " at " + race);
+            alert("No Data for " + analysis.name + " at " + analysis.meet);
         }
 
 
