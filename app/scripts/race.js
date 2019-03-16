@@ -10,8 +10,9 @@ module.exports = React.createClass({
     componentDidMount: function () {
     	this.state._isMounted = true;
         console.log("State Data: ");
-        console.log(this.props.location.state.data[0]);
-        this.setState(this.props.location.state.data[0]);
+        console.log(this.props);
+        console.log(this.props.location.state.data);
+        this.setState(this.props.location.state.data);
     },
 
     navigate: function(route) {

@@ -35,20 +35,6 @@ module.exports = React.createClass({
             }.bind(this));
         }
     },
-    getRaces: function() {
-        return [
-            {
-                id: "bigmeet",
-                name: "Big Meet",
-                runners: [ "Jon", "Charlie", "Caleb"]
-            },
-            {
-                id: "miaaindoors",
-                name: "MIAA Indoor Conference",
-                runners: [ "Addison", "Jamo", "Micah", "Jon"]
-            }
-            ];
-    },
     expand : function(id) {
         console.log(id);
         if(this.state.selectedRace != id) {
@@ -73,7 +59,7 @@ module.exports = React.createClass({
                 state: { data: analysis }
             });
         } else {
-            alert("No Data for " + analysis.name + " at " + analysis.meet);
+            alert("No Data for that choice");
         }
 
 

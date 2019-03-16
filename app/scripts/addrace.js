@@ -54,7 +54,7 @@ module.exports = React.createClass({
         $.ajax({
             url: API_URL,
             dataType: 'json',
-            type: 'POST',
+            type: 'PUT',
             data: race,
         })
          .done(function(result){
