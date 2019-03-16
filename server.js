@@ -54,112 +54,17 @@ app.get('/api/races', function(req, res) {
     });
 });
 
-// GET - /api/challenges/
-app.get('/api/challenges', function(req, res) {
-    console.log("GET")
-    console.log(req.query)
-    tictactoeDB.collection('challenges').find({opponent: req.query.username}).toArray((err, result) => {
-        if (err) throw err
-        if(result === undefined || result.length == 0) {
-            res.statusCode = 201;
-            res.send({result: "No Challenges"});
-        } else {
-            res.send({result: result[0]});
-        }
-    });
-});
-
-// GET - /api/archivedUsers/
-app.get('/api/archivedUsers', function(req, res) {
-    tictactoeDB.collection('archivedUsers').find().toArray((err, result) => {
-        if (err) throw err
-        if(result === undefined || result.length == 0) {
-            res.statusCode = 201;
-            res.send({result: "No Users"});
-        } else {
-            res.send({result: result});
-        }
-    });
-});
-
-//GET - /api/moves
-app.get('/api/moves', function(req, res) {
-    tictactoeDB.collection('moves').find(
-      {$or: [
-        {$and: [
-          {username: req.query.username}, {opponent: req.query.opponent}
-        ]},
-        {$and: [
-          {username: req.query.opponent}, {opponent: req.query.username}
-        ]}
-      ]}).toArray((err, result) => {
-        if(err) throw err
-        res.json(result);
-    });
-});
-
-// POST - /api/usernames/
+// POST - /api/races/
 app.post('/api/races', function(req, res, next) {
     postraceDB.collection('races').insert(req.body);
     res.statusCode = 200;
     res.send({result: "Success"});
 });
-
-// POST - /api/challenges/
-app.post('/api/challenges', function(req, res) {
-    tictactoeDB.collection('challenges').find({username: req.body.username}).toArray((err, result) => {
-        if (err) throw err
-        if(result === undefined || result.length == 0) {
-            tictactoeDB.collection('challenges').insert(req.body);
-            res.send({result: "Challenge Issued."    });
-        } else {
-            res.statusCode = 201;
-            res.send({result: "Challenge Already Sent..."});
-        }
-    });
-
+app.put('/api/races', function(req, res, next) {
+    postraceDB.collection('races').update(req.body);
+    res.statusCode = 200;
+    res.send({result: "Success"});
 });
-
-// PUT - /api/archivedUsers/
-app.put('/api/archivedUsers', function(req, res) {
-    tictactoeDB.collection('archivedUsers').update({username: req.body.username}, req.body, {upsert: true});
-});
-
-// POST - /api/moves/
-app.post('/api/moves', function(req, res) {
-    console.log("POST Moves");
-    console.log(req.body);
-    tictactoeDB.collection('moves').insert(req.body);
-})
-
-// DELETE - /api/usernames/
-app.delete('/api/usernames', function(req, res) {
-    var username = (req.body.username);
-    try {
-        tictactoeDB.collection('usernames').remove(req.body);
-    } catch(e) {
-        console.log(e);
-    }
-})
-
-// DELETE - /api/challenges/
-app.delete('/api/challenges', function(req, res) {
-    try {
-        tictactoeDB.collection('challenges').remove({username: req.body.username});
-        tictactoeDB.collection('challenges').remove({opponent: req.body.username});
-    } catch(e) {
-        console.log(e);
-    }
-});
-
-app.delete('/api/moves', function(req,res) {
-    try {
-        tictactoeDB.collection('moves').remove({username: req.body.username});
-        tictactoeDB.collection('moves').remove({opponent: req.body.username});
-    } catch(e) {
-        console.log(e);
-    }
-})
 
 
 // Add Headers to responses
