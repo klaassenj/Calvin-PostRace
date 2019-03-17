@@ -42,32 +42,48 @@ module.exports = React.createClass({
     },
     handleSubmit: function(e) {
         e.preventDefault();
-        var race = { name : this.state.name, 
-                     meet : this.state.meet,
-                     event : this.state.event,
-                     thoughts : this.state.thoughts,
-                     positives : this.state.positives,
-                     goal : this.state.goal,
-                     attitude : this.state.attitude,
-                     effort : this.state.effort
-                 };
-        $.ajax({
-            url: API_URL,
-            dataType: 'json',
-            type: 'POST',
-            data: race,
-        })
-         .done(function(result){
-             console.log(result);
-         }.bind(this))
-         .fail(function(xhr, status, errorThrown) {
-             console.error(xAPI_URL, status, errorThrown.toString());
-         }.bind(this));
+        var errors = [];
+        
+        if(this.state.event == undefined || this.state.event == "") {
+            errors.push("The Event Field must be filled out.");
+        }
+        if(this.state.name == undefined || this.state.name == "") {
+            errors.push("The Name Field must be filled out");
+        }
+        if(this.state.meet == undefined || this.state.meet == "") {
+            errors.push("The Meet Field must be filled out");
+        }
+        if(errors.length == 0) {
+            var race = { name : this.state.name, 
+                         meet : this.state.meet,
+                         event : this.state.event,
+                         thoughts : this.state.thoughts,
+                         positives : this.state.positives,
+                         goal : this.state.goal,
+                         attitude : this.state.attitude,
+                         effort : this.state.effort
+                     };
+            $.ajax({
+                url: API_URL,
+                dataType: 'json',
+                type: 'POST',
+                data: race,
+            })
+             .done(function(result){
+                 console.log(result);
+             }.bind(this))
+             .fail(function(xhr, status, errorThrown) {
+                 console.error(xAPI_URL, status, errorThrown.toString());
+             }.bind(this));
+        } else {
+            var message= "Sorry, you didn't fill out the form correctly:\n";
+            errors.forEach(error => message += error + "\n");
+        }
     },
     getEventChoices: function() {
         //AJAX Call
         var events = [
-            "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile"
+            "", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile"
         ]
 
         return events.map(event => {
@@ -96,7 +112,7 @@ module.exports = React.createClass({
                     value={this.state.meet}
                     onChange={this.handleMeetChange}
                 />
-                <p> Main Event </p>
+                <p> Event </p>
                 <select name = "dropdown" onChange={this.handleEventChange}>
                     { this.getEventChoices() }
                 </select>
