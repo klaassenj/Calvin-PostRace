@@ -58,7 +58,7 @@ app.get('/api/races', function(req, res) {
 app.post('/api/races', function(req, res, next) {
     postraceDB.collection('races').find({}).toArray((err, array) => {
         var duplicates = array.filter(item => item.name == req.body.name && item.meet == req.body.meet);
-        if(duplicates) {
+        if(duplicates.length > 0) {
             postraceDB.collection('races').update(req.body);
             res.statusCode = 200;
             res.send({result: "Successful Update", body: req.body, dup: duplicates});    
