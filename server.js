@@ -56,9 +56,21 @@ app.get('/api/races', function(req, res) {
 
 // POST - /api/races/
 app.post('/api/races', function(req, res, next) {
-    postraceDB.collection('races').insert(req.body);
-    res.statusCode = 200;
-    res.send({result: "Success"});
+    postraceDB.collection('races').find({}).toArray((err, array) => {
+        var duplicates = array.filter(item => item.name == req.body.name && item.meet == req.body.meet);
+        if(duplicates) {
+            postraceDB.collection('races').update(req.body);
+            res.statusCode = 200;
+            res.send({result: "Successful Update", body: req.body, dup: duplicates});    
+        } else {
+            postraceDB.collection('races').insert(req.body);
+            res.statusCode = 200;
+            res.send({result: "Successful Insert", body: req.body, dup: duplicates});    
+        }
+        
+        
+    });
+    
 });
 app.put('/api/races', function(req, res, next) {
     postraceDB.collection('races').update(req.body);
