@@ -78,6 +78,7 @@ module.exports = React.createClass({
         } else {
             var message= "Sorry, you didn't fill out the form correctly:\n";
             errors.forEach(error => message += error + "\n");
+            alert(message);
         }
     },
     getEventChoices: function() {

@@ -29,6 +29,7 @@ module.exports = React.createClass({
         var Goal = (<p id="goal"> Goal: {this.state.goal}</p>)
         var Attitude = (<p id="attitude"> Attitude: {this.state.attitude}</p>)
         var Effort = (<p id="effort"> Effort: {this.state.effort}</p>)
+        var Goal = (<p id="goal"> Goal: {this.state.goal}</p>)
 
         return (
             <div>
@@ -37,6 +38,7 @@ module.exports = React.createClass({
                     { Name }
                     { Thoughts }
                     { Positives }
+                    { Goal }
                     { Attitude }
                     { Effort }
                 </div>
