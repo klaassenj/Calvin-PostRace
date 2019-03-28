@@ -72,12 +72,22 @@ app.post('/api/races', function(req, res, next) {
     });
     
 });
-app.put('/api/races', function(req, res, next) {
-    postraceDB.collection('races').update(req.body);
-    res.statusCode = 200;
-    res.send({result: "Success"});
-});
 
+// POST - /api/bugs
+app.post('/api/bugs', function(req, res, next) {
+    postraceDB.collection('bugs').find({}).toArray((err, array) => {
+        var duplicates = array.filter(item => item.name == req.body.name && item.bugdesc == req.body.bugdesc);
+        if(duplicates.length > 0) {
+            postraceDB.collection('bugs').update(req.body);
+            res.statusCode = 200;
+            res.send({result: "Successful Update", body: req.body, dup: duplicates});    
+        } else {
+            postraceDB.collection('bugs').insert(req.body);
+            res.statusCode = 200;
+            res.send({result: "Successful Insert", body: req.body, dup: duplicates});    
+        }
+    });
+});
 
 // Add Headers to responses
 app.use(function(req, res, next) {

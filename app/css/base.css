@@ -7,6 +7,13 @@ body {
   padding: 30px;
 }
 
+.row {
+  display: inline;
+  
+  display: flex;
+  flex-direction: row;
+}
+
 a {
   color: #4183c4;
   text-decoration: none;
@@ -109,7 +116,7 @@ textarea {
   border-style: bold;
 }
 
-#thoughts, #positives {
+#thoughts, #positives, .widetextarea {
   height: auto;
   width: 300px;
   border: 2px;

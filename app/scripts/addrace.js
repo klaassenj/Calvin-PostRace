@@ -8,7 +8,7 @@ import { API_URL, POLL_INTERVAL } from './global';
 module.exports = React.createClass({
 
     getInitialState: function() {
-        return {data: [], _isMounted: false};
+        return {data: [], _isMounted: false, submitted: ""};
     },
     componentDidMount: function() {
         this.state._isMounted = true;
@@ -71,6 +71,7 @@ module.exports = React.createClass({
             })
              .done(function(result){
                  console.log(result);
+                 this.setState({submitted: "Submission Successful."});
              }.bind(this))
              .fail(function(xhr, status, errorThrown) {
                  console.error(xAPI_URL, status, errorThrown.toString());
@@ -80,6 +81,7 @@ module.exports = React.createClass({
             errors.forEach(error => message += error + "\n");
             alert(message);
         }
+
     },
     getEventChoices: function() {
         //AJAX Call
@@ -90,6 +92,7 @@ module.exports = React.createClass({
         return events.map(event => {
             return (<option value = { event }> { event } </option>)
         });
+        var confirmation = (<p> Thank you for completing your post race analysis! </p>)
     },
     render: function() {
 
@@ -160,17 +163,13 @@ module.exports = React.createClass({
                     onChange={this.handleEffortChange}
                 />
                 
+                <div className="row">
+                    <input type="submit" value="Post" />
+                    <p> { this.state.submitted } </p>
+                </div>
                 
-                <input type="submit" value="Post" />
             </form>
-            <p>{this.state.name}</p>
-            <p>{this.state.meet}</p>
-            <p>{this.state.event}</p>
-            <p>{this.state.thoughts}</p>
-            <p>{this.state.positives}</p>
-            <p>{this.state.goal}</p>
-            <p>{this.state.attitude}</p>
-            <p>{this.state.effort}</p>
+            
             </div>
             );
         }

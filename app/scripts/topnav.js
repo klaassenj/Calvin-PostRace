@@ -22,21 +22,10 @@ module.exports = React.createClass({
         		navItem: "Race Archives",
         		route: "pastraces"
         	},
-
         	{
-        		navItem: "Runner Archives",
-        		route: "runners"
-        	},
-
-        	{
-        		navItem: "About",
-        		route: "about"
-        	},
-
-            {
-                navItem: "Help",
-                route: "help"
-            },
+        		navItem: "Bugs",
+        		route: "bugs"
+        	}
 
         	];
     },

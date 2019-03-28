@@ -25,7 +25,9 @@ module.exports = React.createClass({
             <div>
                 <h1> Welcome to Calvin Post Race Analysis! </h1>
                 <TopNav></TopNav>
-                
+                <p> Click the Analysis tab to fill out your post race form. </p>
+                <p> Click the Race Archives to see recent analysis by your teammates. </p>
+                <p> Click the Bugs tab to report a bug or suggest an improvement </p>
             </div>
             );
     }
