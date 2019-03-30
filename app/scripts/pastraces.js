@@ -68,7 +68,7 @@ module.exports = React.createClass({
 
     },
     searchSuccessful: function(analysis) {
-        return analysis.name.includes(this.state.search) || analysis.meet.includes(this.state.search);
+        return analysis.name.toLowerCase().includes(this.state.search.toLowerCase()) || analysis.meet.toLowerCase().includes(this.state.search.toLowerCase());
     },
     createHTML: function() {
         var relevantResults = this.state.analysis.filter(analysis => {
