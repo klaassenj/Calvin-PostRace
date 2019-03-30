@@ -130,5 +130,13 @@ input {
   width: auto;
 }
 
+#racelist, #searchbar {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-flow: column wrap;
+  align-items: left;
+}
+
 
 

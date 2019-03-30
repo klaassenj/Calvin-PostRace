@@ -9,7 +9,7 @@ import { API_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
     getInitialState: function() {
-        return {analysis: [], _isMounted: false, selectedRace: null, races: null};
+        return {analysis: [], _isMounted: false, selectedRace: null, races: null, search: ""};
     },
     componentDidMount: function() {
         this.state._isMounted = true;
@@ -17,6 +17,9 @@ module.exports = React.createClass({
     },
     componentWillUnmount: function() {
         this.state._isMounted = false;
+    },
+    handleSearchChange: function(e) {
+        this.setState({search: e.target.value});
     },
     loadAnalysisFromServer : function() {
         if (this.state._isMounted) {
@@ -64,23 +67,21 @@ module.exports = React.createClass({
 
 
     },
+    searchSuccessful: function(analysis) {
+        return analysis.name.includes(this.state.search) || analysis.meet.includes(this.state.search);
+    },
     createHTML: function() {
-        return this.state.analysis.map(analysis => {
-            return (<a key= { analysis.name } onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);
-        });
-        /*
-        return this.getRaces().map(race => {
-            if(race.id == this.state.selectedRace) {
-                var Runners = race.runners.map(runner => {
-                    return (<a key={runner} onClick={() => this.navigate(race.name, runner)}>{runner}</a>)
-                });
-                return (<div className="container racebox"><p id="raceTitle">{ race.name }</p> {Runners} </div>);
+        var relevantResults = this.state.analysis.filter(analysis => {
+            if(this.state.search == "") {
+                return true;
             } else {
-                return(<a key={race.id} onClick={() => this.expand(race.id)}>{race.name}</a>);
+                return this.searchSuccessful(analysis);
             }
-
+        })
+        return relevantResults.map(analysis => {
+            return (<a key= { analysis.name + analysis.meet + Math.random(1000) } onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);    
+            
         });
-        */
     },
     render: function() {
         this.state.races = this.createHTML();
@@ -89,7 +90,17 @@ module.exports = React.createClass({
                 <h1>Welcome to Past Races!</h1>
                 <TopNav></TopNav>
                 <div className="container">
-                { this.state.races }
+                    <div id="searchbar">
+                        <input
+                            id="name"
+                            type="text"
+                            placeholder="Search..."
+                            onChange={this.handleSearchChange}
+                        />
+                    </div>
+                    <div id="racelist">
+                        { this.state.races }
+                    </div>
                 </div>
             </div>
         );
