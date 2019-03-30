@@ -43,7 +43,7 @@ module.exports = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault();
         var errors = [];
-        
+
         if(this.state.event == undefined || this.state.event == "") {
             errors.push("The Event Field must be filled out.");
         }
@@ -54,7 +54,7 @@ module.exports = React.createClass({
             errors.push("The Meet Field must be filled out");
         }
         if(errors.length == 0) {
-            var race = { name : this.state.name, 
+            var race = { name : this.state.name,
                          meet : this.state.meet,
                          event : this.state.event,
                          thoughts : this.state.thoughts,
@@ -86,7 +86,7 @@ module.exports = React.createClass({
     getEventChoices: function() {
         //AJAX Call
         var events = [
-            "", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile"
+            "", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile", "1600m", "800m", "400m", "400m Split"
         ]
 
         return events.map(event => {
@@ -108,7 +108,7 @@ module.exports = React.createClass({
                     value={this.state.name}
                     onChange={this.handleNameChange}
                 />
-                
+
                 <input
                     id="meet"
                     type="text"
@@ -146,8 +146,8 @@ module.exports = React.createClass({
                 />
                 <input
                     id="attitude"
-                    type="text" 
-                    min="1" 
+                    type="text"
+                    min="1"
                     max="10"
                     placeholder="Attitude (1-10)"
                     value={this.state.attitude}
@@ -156,20 +156,20 @@ module.exports = React.createClass({
                 <input
                     id="effort"
                     type="text"
-                    min="1" 
+                    min="1"
                     max="10"
                     placeholder="Effort (1-10)"
                     value={this.state.effort}
                     onChange={this.handleEffortChange}
                 />
-                
+
                 <div className="row">
                     <input type="submit" value="Post" />
                     <p> { this.state.submitted } </p>
                 </div>
-                
+
             </form>
-            
+
             </div>
             );
         }
