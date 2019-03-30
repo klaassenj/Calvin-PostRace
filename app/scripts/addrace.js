@@ -86,7 +86,7 @@ module.exports = React.createClass({
     getEventChoices: function() {
         //AJAX Call
         var events = [
-            "", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile", "1600m", "800m", "400m", "400m Split"
+            "", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile", "1600m", "800m", "400m", "2000m", "400m Split"
         ]
 
         return events.map(event => {
