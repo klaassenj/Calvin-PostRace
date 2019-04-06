@@ -44,7 +44,7 @@ module.exports = React.createClass({
         e.preventDefault();
         var errors = [];
 
-        if(this.state.event == undefined || this.state.event == "") {
+        if(this.state.event == undefined || this.state.event == "Event") {
             errors.push("The Event Field must be filled out.");
         }
         if(this.state.name == undefined || this.state.name == "") {
@@ -86,11 +86,11 @@ module.exports = React.createClass({
     getEventChoices: function() {
         //AJAX Call
         var events = [
-            "", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile", "1600m", "800m", "400m", "2000m", "400m Split"
+            "Event", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile", "1600m", "800m", "400m", "2000m", "400m Split"
         ]
 
         return events.map(event => {
-            return (<option value = { event }> { event } </option>)
+            return (<option key = { event } value = { event }> { event } </option>)
         });
         var confirmation = (<p> Thank you for completing your post race analysis! </p>)
     },
@@ -116,8 +116,7 @@ module.exports = React.createClass({
                     value={this.state.meet}
                     onChange={this.handleMeetChange}
                 />
-                <p> Event </p>
-                <select name = "dropdown" onChange={this.handleEventChange}>
+                <select id="event" name = "dropdown" onChange={this.handleEventChange}>
                     { this.getEventChoices() }
                 </select>
                 <textarea
@@ -163,9 +162,9 @@ module.exports = React.createClass({
                     onChange={this.handleEffortChange}
                 />
 
-                <div className="row">
+                <div className="row submitbutton">
                     <input type="submit" value="Post" />
-                    <p> { this.state.submitted } </p>
+                    <p id="submitted"> { this.state.submitted } </p>
                 </div>
 
             </form>

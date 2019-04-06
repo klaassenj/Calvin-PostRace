@@ -31,9 +31,13 @@ var mclient = require('mongodb').MongoClient
 
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
-    if (err) throw err
-    postraceDB = client.db(database);
-    console.log("Connected Successfully to MongoDB.")
+    if (err) {
+        console.warn(err)
+        console.warn("Continuing Deployment without Database Access...")
+    } else {    
+        postraceDB = client.db(database);
+        console.log("Connected Successfully to MongoDB.")
+    }
 });
 
 // Set up Body Parser

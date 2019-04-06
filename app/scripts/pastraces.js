@@ -1,15 +1,12 @@
 import React from 'react';
 import $ from 'jquery';
-
-import CommentList from './commentList';
-import CommentForm from './commentForm';
-import TopNav from './topnav'
+import TopNav from './topnav';
 import { Router, Route, browserHistory } from 'react-router';
 import { API_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
     getInitialState: function() {
-        return {analysis: [], _isMounted: false, selectedRace: null, races: null, search: ""};
+        return {analysis: [], _isMounted: false, selectedRace: null, races: null, search: "", header: "Recently Added"};
     },
     componentDidMount: function() {
         this.state._isMounted = true;
@@ -20,6 +17,11 @@ module.exports = React.createClass({
     },
     handleSearchChange: function(e) {
         this.setState({search: e.target.value});
+        if(this.state.search == "") {
+            this.setState({header: "Recently Added"})
+        } else {
+            this.setState({header: "Search Results"})
+        }
     },
     loadAnalysisFromServer : function() {
         if (this.state._isMounted) {
@@ -68,6 +70,7 @@ module.exports = React.createClass({
 
     },
     searchSuccessful: function(analysis) {
+        //var searchTerms = this.state.search.split(" "); // This could be useful for later
         return analysis.name.toLowerCase().includes(this.state.search.toLowerCase()) || analysis.meet.toLowerCase().includes(this.state.search.toLowerCase());
     },
     createHTML: function() {
@@ -78,6 +81,7 @@ module.exports = React.createClass({
                 return this.searchSuccessful(analysis);
             }
         })
+        relevantResults.reverse();
         return relevantResults.map(analysis => {
             return (<a key= { analysis.name + analysis.meet + Math.random(1000) } onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);    
             
@@ -98,6 +102,7 @@ module.exports = React.createClass({
                             onChange={this.handleSearchChange}
                         />
                     </div>
+                    <h3> { this.state.header } </h3>
                     <div id="racelist">
                         { this.state.races }
                     </div>

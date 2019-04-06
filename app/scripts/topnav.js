@@ -43,7 +43,7 @@ module.exports = React.createClass({
 	render: function() {
 		var MenuItems = this.getMenuItems().map(item => {
 			return(<a key={item.route} onClick={() => this.navigate(item.route)}>{item.navItem}</a>);
-		});
+        });
         return (
             <div>
                 <div className="topnav">

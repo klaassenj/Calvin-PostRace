@@ -17,7 +17,10 @@ module.exports = {
     },
 
     plugins: [
-		new HtmlWebpackPlugin({template: __dirname + "/app/index.tmpl.html"}),
+		new HtmlWebpackPlugin({
+                template: __dirname + "/app/index.tmpl.html",
+                favicon: __dirname + "/app/favicon.ico"
+        }),
         new webpack.HotModuleReplacementPlugin()
     ],
 

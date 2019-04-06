@@ -67,7 +67,9 @@ module.exports = React.createClass({
                         rows="10"
                         onChange={this.handleBugChange}
                     />
-                    <input type="submit" value="Submit Report" />
+                    <div className="submitbutton">
+                        <input type="submit" value="Submit Report" />
+                    </div>
                 </form>
             </div>
         );
