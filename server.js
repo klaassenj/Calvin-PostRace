@@ -28,7 +28,7 @@ var port = '41815'
 var database = 'calvinpostrace'
 var postraceDB = null;
 var mclient = require('mongodb').MongoClient
-
+var sync = false;
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
     if (err) {
@@ -37,6 +37,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
     } else {    
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
+        if(sync) synchronizeBackup();
     }
 });
 
@@ -63,18 +64,25 @@ app.post('/api/races', function(req, res, next) {
     postraceDB.collection('races').find({}).toArray((err, array) => {
         var duplicates = array.filter(item => item.name == req.body.name && item.meet == req.body.meet);
         if(duplicates.length > 0) {
-            postraceDB.collection('races').update(req.body);
+
+            postraceDB.collection('races').update(duplicates[0], req.body);
             res.statusCode = 200;
             res.send({result: "Successful Update", body: req.body, dup: duplicates});    
         } else {
             postraceDB.collection('races').insert(req.body);
             res.statusCode = 200;
             res.send({result: "Successful Insert", body: req.body, dup: duplicates});    
-        }
-        
-        
+        } 
     });
-    
+});
+
+// DELETE - /api/races
+app.delete('/api/races', function(req, res, next) {
+    try {
+        postraceDB.collection('races').delete(req.body);
+    } catch(e) {
+        console.warn(e);
+    }
 });
 
 // POST - /api/bugs
@@ -108,3 +116,18 @@ app.use('*', express.static(APP_PATH));
 app.listen(app.get('port'), function() {
         console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
+
+function synchronizeBackup() {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Backup Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                var backupFile = doc;
+                delete backupFile._id;
+                postraceDB.collection("backup-races").update(doc, backupFile, {upsert: true});
+            });
+        }
+    });
+};

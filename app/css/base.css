@@ -4,12 +4,13 @@
 
 body {
   background: #ddd;
-  /*background-image: image("./app/assets/bg.png");*/
+  background-image: url("/app/assets/bg.png");
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.7;
   margin: 0;
   padding: 30px;
+  
 }
 
 .row {
@@ -128,7 +129,7 @@ textarea {
   border: 2px;
 }
 
-#name, #meet, #event, #goal, #searchbar {
+#name, #meet, #event, #goal, #searchbar, #turnpoint {
   width: 300px;
 }
 
@@ -168,13 +169,17 @@ input {
   columns: 2;
 }
 
+#racelist a {
+  padding: 5px;
+}
+
 #submitted {
   color: #555;
   font-size: 20px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.submitbutton input {
+.submitbutton input, #edit {
   width: auto;
   background-color: #800000;
   color: #FFD700;
@@ -182,6 +187,11 @@ input {
   text-align: center;
   font-size: 20px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  cursor: pointer;
+}
+
+#edit {
+  border-radius: 15px;
 }
 
 

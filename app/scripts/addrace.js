@@ -12,6 +12,11 @@ module.exports = React.createClass({
     },
     componentDidMount: function() {
         this.state._isMounted = true;
+        console.log(this.props.location.state)
+        var data = this.props.location.state;
+        if(data) {
+            this.setState(data);
+        }
     },
     componentWillUnmount: function() {
         this.state._isMounted = false;
@@ -33,6 +38,9 @@ module.exports = React.createClass({
     },
     handleGoalChange: function(e) {
         this.setState({goal: e.target.value});
+    },
+    handleTurnPointChange: function(e) {
+        this.setState({turnpoint: e.target.value});
     },
     handleAttitudeChange: function(e) {
         this.setState({attitude: e.target.value});
@@ -60,9 +68,13 @@ module.exports = React.createClass({
                          thoughts : this.state.thoughts,
                          positives : this.state.positives,
                          goal : this.state.goal,
+                         turnpoint: this.state.turnpoint,
                          attitude : this.state.attitude,
                          effort : this.state.effort
                      };
+            this.setState({submitted: "Submission in Progress..."});
+            console.log("Race")
+            console.log(race);
             $.ajax({
                 url: API_URL,
                 dataType: 'json',
@@ -75,6 +87,7 @@ module.exports = React.createClass({
              }.bind(this))
              .fail(function(xhr, status, errorThrown) {
                  console.error(xAPI_URL, status, errorThrown.toString());
+                 this.setState({submitted: "Submission Failed. Try again with a better connection."});
              }.bind(this));
         } else {
             var message= "Sorry, you didn't fill out the form correctly:\n";
@@ -92,7 +105,7 @@ module.exports = React.createClass({
         return events.map(event => {
             return (<option key = { event } value = { event }> { event } </option>)
         });
-        var confirmation = (<p> Thank you for completing your post race analysis! </p>)
+        //var confirmation = (<p> Thank you for completing your post race analysis! </p>)
     },
     render: function() {
 
@@ -126,6 +139,14 @@ module.exports = React.createClass({
                     value={this.state.thoughts}
                     rows="10"
                     onChange={this.handleThoughtsChange}
+                />
+                <textarea
+                    id="turnpoint"
+                    type="text"
+                    placeholder="What were the turning points of the race? How did you react?"
+                    value={this.state.turnpoint}
+                    rows="10"
+                    onChange={this.handleTurnPointChange}
                 />
                 <textarea
                     id="positives"
