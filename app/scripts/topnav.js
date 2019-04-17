@@ -22,6 +22,10 @@ module.exports = React.createClass({
         		navItem: "Race Archives",
         		route: "pastraces"
         	},
+            {
+                navItem: "PRs",
+                route:"records"
+            },
         	{
         		navItem: "Bugs",
         		route: "bugs"

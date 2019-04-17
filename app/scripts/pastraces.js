@@ -28,7 +28,7 @@ module.exports = React.createClass({
             $.ajax({
                     url: "/api/races",
                     dataType: 'json',
-                    cache: false
+                    cache: true
             })
             .done(function (result) {
                 this.setState({analysis: result});

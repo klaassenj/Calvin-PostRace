@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 import '../css/base.css'
 import { Router, Route, browserHistory } from 'react-router';
 module.exports = React.createClass({
@@ -23,15 +24,11 @@ module.exports = React.createClass({
     },
 
     editRace: function() {
-        var race = { name : this.state.name,
-            meet : this.state.meet,
-            event : this.state.event,
-            thoughts : this.state.thoughts,
-            positives : this.state.positives,
-            goal : this.state.goal,
-            turnpoint: this.state.turnpoint,
-            attitude : this.state.attitude,
-            effort : this.state.effort
+        var race = { name : this.props.name,
+            fifteen : this.props.fifteen,
+            five : this.props.five,
+            ten : this.props.ten,
+            steeple : this.state.positives
         };
         browserHistory.push({
             pathname: "/analysis",

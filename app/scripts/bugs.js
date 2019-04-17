@@ -1,14 +1,11 @@
 import React from 'react';
 import $ from 'jquery';
-
-import CommentList from './commentList';
-import CommentForm from './commentForm';
-import TopNav from './topnav'
+import TopNav from './topnav';
 import { API_URL, API_BUGS_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
     getInitialState: function() {
-        return {data: [], _isMounted: false, bugdesc: "", name: ""};
+        return {data: [], _isMounted: false, bugdesc: "", name: "", submitted:""};
     },
     componentDidMount: function() {
         this.state._isMounted = true;
@@ -40,11 +37,13 @@ module.exports = React.createClass({
         })
          .done(function(result){
              console.log(result);
+             this.setState({submitted: "Bug Submission Successful."})
          }.bind(this))
          .fail(function(xhr, status, errorThrown) {
              console.error(xAPI_URL, status, errorThrown.toString());
          }.bind(this));
     },
+
     render: function() {
         return (
             <div>
@@ -68,7 +67,10 @@ module.exports = React.createClass({
                         onChange={this.handleBugChange}
                     />
                     <div className="submitbutton">
-                        <input type="submit" value="Submit Report" />
+                        <span>
+                            <input type="submit" value="Submit Report" />
+                            <p id="submitted"> { this.state.submitted } </p>
+                        </span>
                     </div>
                 </form>
             </div>
