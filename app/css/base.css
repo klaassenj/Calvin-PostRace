@@ -179,7 +179,7 @@ input {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.submitbutton input, #edit {
+.submitbutton input, #edit, #back {
   width: auto;
   background-color: #800000;
   color: #FFD700;
@@ -190,7 +190,7 @@ input {
   cursor: pointer;
 }
 
-#edit {
+#edit, #back {
   border-radius: 15px;
 }
 

@@ -6,13 +6,14 @@ import { API_URL, POLL_INTERVAL } from './global';
 module.exports = React.createClass({
 
     getInitialState: function() {
-        return {data: [], _isMounted: false, submitted: ""};
+        return {data: [], _isMounted: false, submitted: "", editing: false, ID:""};
     },
     componentDidMount: function() {
         this.state._isMounted = true;
         console.log(this.props.location.state)
         var data = this.props.location.state;
         if(data) {
+            this.setState({editing : true});
             this.setState(data);
         }
     },
@@ -60,7 +61,9 @@ module.exports = React.createClass({
             errors.push("The Meet Field must be filled out");
         }
         if(errors.length == 0) {
-            var race = { name : this.state.name,
+            var race = { 
+                         ID : this.state.name + this.state.meet,
+                         name : this.state.name,
                          meet : this.state.meet,
                          event : this.state.event,
                          thoughts : this.state.thoughts,
@@ -69,10 +72,15 @@ module.exports = React.createClass({
                          turnpoint: this.state.turnpoint,
                          attitude : this.state.attitude,
                          effort : this.state.effort
-                     };
-            this.setState({submitted: "Submission in Progress..."});
-            console.log("Race")
+            };
+            console.log("Race just created")
             console.log(race);
+            if(this.state.editing) {
+                race.ID = this.props.location.state.ID;
+                console.log("Replace ID when Editing");
+                console.log(race);
+            }
+            this.setState({submitted: "Submission in Progress..."});
             $.ajax({
                 url: API_URL,
                 dataType: 'json',
@@ -80,6 +88,7 @@ module.exports = React.createClass({
                 data: race,
             })
              .done(function(result){
+                 console.log("Entry to Database Received")
                  console.log(result);
                  this.setState({submitted: "Submission Successful."});
              }.bind(this))

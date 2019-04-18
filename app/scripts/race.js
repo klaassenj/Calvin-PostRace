@@ -23,7 +23,9 @@ module.exports = React.createClass({
     },
 
     editRace: function() {
-        var race = { name : this.state.name,
+        var race = { 
+            ID : this.state.ID,
+            name : this.state.name,
             meet : this.state.meet,
             event : this.state.event,
             thoughts : this.state.thoughts,
@@ -54,6 +56,7 @@ module.exports = React.createClass({
             <div>
                 <div className="container">
                     <span>
+                        <button id="back" onClick={ () => this.navigate("pastraces")}>Back</button>
                         <button id="edit" onClick={ this.editRace }>Edit</button>
                     </span>
                     { MeetAndEvent }

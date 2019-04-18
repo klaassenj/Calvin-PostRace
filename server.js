@@ -29,6 +29,8 @@ var database = 'calvinpostrace'
 var postraceDB = null;
 var mclient = require('mongodb').MongoClient
 var sync = false;
+var addID = false;
+var clearNoID = false;
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
     if (err) {
@@ -38,6 +40,8 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
         if(sync) synchronizeBackup();
+        if(addID) writeNewIDs();
+        if(clearNoID) clearNoIDs();
     }
 });
 
@@ -62,7 +66,7 @@ app.get('/api/races', function(req, res) {
 // POST - /api/races/
 app.post('/api/races', function(req, res, next) {
     postraceDB.collection('races').find({}).toArray((err, array) => {
-        var duplicates = array.filter(item => item.name == req.body.name && item.meet == req.body.meet);
+        var duplicates = array.filter(item => item.ID == req.body.ID);
         if(duplicates.length > 0) {
 
             postraceDB.collection('races').update(duplicates[0], req.body);
@@ -128,6 +132,50 @@ function synchronizeBackup() {
                 delete backupFile._id;
                 postraceDB.collection("backup-races").update(doc, backupFile, {upsert: true});
             });
+            console.log("Backup completed successfully.")
         }
     });
 };
+
+function writeNewIDs() {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("writing new IDs Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                console.log("Updating Doc " + doc.name + " " + doc.meet)
+                if(doc.ID == undefined) {
+                    var addID = doc;
+                    delete addID._id;
+                    addID.ID = doc.name + doc.meet
+                    console.log("New Doc");
+                    console.log(addID.ID + "\n" + addID.name + "\n" + addID.meet)
+                    postraceDB.collection("races").update(doc, addID, {upsert: true})
+                }
+            })
+            console.log("Writing New IDs Successful.")
+        }
+    });
+}
+
+function clearNoIDs() {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Clear Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                console.log("New Doc");
+                console.log(doc.ID + "\n" + doc.name + "\n" + doc.meet)
+                if(doc.ID == undefined) {
+                    console.log("Deleting " + doc.name + " " + doc.meet)
+                    postraceDB.collection("races").remove(doc)
+                } else {
+                    console.log("No Action Needed.")
+                }
+            })
+            console.log("Clear Successful.")
+        }
+    });
+}

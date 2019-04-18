@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
@@ -14,8 +13,8 @@ ReactDOM.render((
 	<Router history={browserHistory}>
 		<Route path="/" component={Welcome}/>
 		<Route path="/pastraces" component={PastRaces} />
-		<Route path="/analysis" component={AddRace} />
-		<Route path="/records" component={Records} />
+		<Route path="/analysis" component={ AddRace } />
+		<Route path="/records" component={ Records } />
 		<Route path="/bugs" component={Bugs} />
 		<Route path="/race" component={ Race } />
 		
