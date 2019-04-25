@@ -47,7 +47,9 @@ module.exports = React.createClass({
             <div>
                 <div className="container">
                     <span><button id="edit" onClick={ this.editRace }>Edit</button></span>
+                    <span> 
                     { Name }
+                    </span>
                     { FifteenPR }
                     { FivePR }
                     { TenPR }
