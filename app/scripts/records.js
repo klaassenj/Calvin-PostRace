@@ -2,19 +2,20 @@ import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
 import { API_URL, POLL_INTERVAL } from './global';
+import Record from './record';
 
 module.exports = React.createClass({
     getInitialState: function() {
         return { _isMounted: false, search: "", records: [] };
     },
     componentDidMount: function() {
-        this.state._isMounted = true;
-        records.push({
+        this.state.records.push({
             name: "Charlie Kornoelje",
             five: "15:58",
             ten: "33:06",
             fifteen: "4:17"
-        })
+        });
+        this.setState({isMounted: true});
     },
     componentWillUnmount: function() {
         this.state._isMounted = false;
@@ -23,7 +24,7 @@ module.exports = React.createClass({
         this.setState({search: e.target.value});
     },
     loadPersonalRecords: function() {
-        if (this.state._isMounted) {
+        if (this.state._isMounted && false) {
             $.ajax({
                     url: "/api/records",
                     dataType: 'json',
