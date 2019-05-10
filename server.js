@@ -28,9 +28,15 @@ var port = '41815'
 var database = 'calvinpostrace'
 var postraceDB = null;
 var mclient = require('mongodb').MongoClient
+
 var sync = false;
 var addID = false;
 var clearNoID = false;
+var databaseToClearNoIDs = "backup-races"
+var addDate = true;
+var clearNoDate = false;
+var recoverFromBackup = false;
+var clearDuplicate = false;
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
     if (err) {
@@ -41,7 +47,11 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         console.log("Connected Successfully to MongoDB.")
         if(sync) synchronizeBackup();
         if(addID) writeNewIDs();
-        if(clearNoID) clearNoIDs();
+        if(clearNoID) clearNoIDs(databaseToClearNoIDs);
+        if(addDate) addDates();
+        if(clearNoDate) clearNoDates("races");
+        if(recoverFromBackup) addFromBackup();
+        if(clearDuplicate) clearDuplicates("races");
     }
 });
 
@@ -130,12 +140,28 @@ function synchronizeBackup() {
             array.forEach(doc => {
                 var backupFile = doc;
                 delete backupFile._id;
-                postraceDB.collection("backup-races").update(doc, backupFile, {upsert: true});
+                postraceDB.collection("backup-races").update({ID: doc.ID}, backupFile, {upsert: true});
             });
             console.log("Backup completed successfully.")
         }
     });
 };
+
+function addFromBackup() {
+    postraceDB.collection("backup-races").find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Recovery Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                var backupFile = doc;
+                delete backupFile._id;
+                postraceDB.collection("races").update({ID: doc.ID}, backupFile, {upsert: true});
+            });
+            console.log("Recovery completed successfully.")
+        }
+    });
+}
 
 function writeNewIDs() {
     postraceDB.collection("races").find({}).toArray((err, array) => {
@@ -159,8 +185,28 @@ function writeNewIDs() {
     });
 }
 
-function clearNoIDs() {
+function addDates() {
     postraceDB.collection("races").find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Add Date failed")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                if(doc.date == undefined || doc.meet.includes("Conf") || doc.meet.includes("MIAA")) {
+                    var newDoc = doc;
+                    delete newDoc._id;
+                    newDoc.date = Date.now();
+                    console.log("Adding Date to " + doc.name + " " + doc.meet)
+                    postraceDB.collection("races").update({ID: doc.ID}, newDoc);
+                }
+            });
+            console.log("Date Adding Sucessful.");
+        }
+    });
+}
+
+function clearNoIDs(database) {
+    postraceDB.collection(database).find({}).toArray((err, array) => {
         if(err) {
             console.warn("Clear Failed...")
             console.warn(err);
@@ -170,12 +216,56 @@ function clearNoIDs() {
                 console.log(doc.ID + "\n" + doc.name + "\n" + doc.meet)
                 if(doc.ID == undefined) {
                     console.log("Deleting " + doc.name + " " + doc.meet)
-                    postraceDB.collection("races").remove(doc)
+                    postraceDB.collection(database).remove(doc)
                 } else {
                     console.log("No Action Needed.")
                 }
             })
             console.log("Clear Successful.")
+        }
+    });
+}
+
+function clearNoDates(database) {
+    postraceDB.collection(database).find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Clear Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                console.log("New Doc");
+                console.log(doc.date + "\n" + doc.name + "\n" + doc.meet)
+                if(doc.date == undefined) {
+                    console.log("Deleting " + doc.name + " " + doc.meet)
+                    postraceDB.collection(database).remove(doc)
+                } else {
+                    console.log("No Action Needed.")
+                }
+            })
+            console.log("Clear Successful.")
+        }
+    });
+}
+
+function clearDuplicates(database) {
+    postraceDB.collection(database).find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Duplicate Clear Failed...")
+            console.warn(err);
+        } else {
+            var duplicates = [];
+            array.forEach(doc => {
+                console.log("New Doc");
+                console.log(doc.date + "\n" + doc.name + "\n" + doc.meet)
+                if(duplicates.includes(doc.ID)) {
+                    console.log("Deleting Copy of" + doc.name + " " + doc.meet)
+                    postraceDB.collection(database).remove(doc)
+                } else {
+                    duplicates.push(doc.ID);
+                    console.log("No Action Needed.")
+                }
+            })
+            console.log("Duplicate Clear Successful.")
         }
     });
 }

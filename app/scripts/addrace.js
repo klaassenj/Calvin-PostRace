@@ -71,7 +71,8 @@ module.exports = React.createClass({
                          goal : this.state.goal,
                          turnpoint: this.state.turnpoint,
                          attitude : this.state.attitude,
-                         effort : this.state.effort
+                         effort : this.state.effort,
+                         date : Date.now()
             };
             console.log("Race just created")
             console.log(race);

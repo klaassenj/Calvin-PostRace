@@ -80,8 +80,12 @@ module.exports = React.createClass({
             } else {
                 return this.searchSuccessful(analysis);
             }
-        })
-        relevantResults.reverse();
+        });
+        // Sorts results by date and places the latest results at the top
+        relevantResults.sort((a,b) => parseFloat(b.date) - parseFloat(a.date));
+        relevantResults.forEach(result => {
+            console.log(result.ID + "  " + result.date)
+        });
         return relevantResults.map(analysis => {
             return (<a key= { analysis.name + analysis.meet + Math.random(1000) } onClick={ () => this.navigate(analysis) }> { analysis.name } @ { analysis.meet }</a>);    
             
