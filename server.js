@@ -33,7 +33,7 @@ var sync = false;
 var addID = false;
 var clearNoID = false;
 var databaseToClearNoIDs = "backup-races"
-var addDate = true;
+var addDate = false;
 var clearNoDate = false;
 var recoverFromBackup = false;
 var clearDuplicate = false;
@@ -192,7 +192,7 @@ function addDates() {
             console.warn(err);
         } else {
             array.forEach(doc => {
-                if(doc.date == undefined || doc.meet.includes("Conf") || doc.meet.includes("MIAA")) {
+                if(doc.date == undefined) {
                     var newDoc = doc;
                     delete newDoc._id;
                     newDoc.date = Date.now();
