@@ -23,7 +23,8 @@ module.exports = createClass({
                 <h1> Welcome to Calvin Post Race Analysis! </h1>
                 <TopNav></TopNav>
                 <p> Click the Analysis tab to fill out your post race form. </p>
-                <p> Click the Race Archives to see recent analysis by your teammates. </p>
+                <p> Click the Current tab to see recent analysis by your teammates. </p>
+                <p> Click the Archives tab to see race analysis from past seasons. </p>
                 <p> Click the Bugs tab to report a bug or suggest an improvement </p>
                 <h2> Development News</h2>
                 <p> Seperation of Current vs Archived Analysis </p>
