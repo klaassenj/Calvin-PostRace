@@ -27,6 +27,7 @@ module.exports = createClass({
                 <p> Click the Bugs tab to report a bug or suggest an improvement </p>
                 <h2> Development News</h2>
                 <p> Seperation of Current vs Archived Analysis </p>
+                <p> Some Design Enhancements </p>
                 
             </div>
         );
