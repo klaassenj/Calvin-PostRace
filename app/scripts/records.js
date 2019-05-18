@@ -3,6 +3,7 @@ import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
 import { API_URL, POLL_INTERVAL } from './global';
+var createClass = require('create-react-class');
 import Record from './record';
 var $TABLE = $('#table');
 var $BTN = $('#export-btn');
@@ -56,7 +57,7 @@ $EXPORT.text(JSON.stringify(data));
 });
 
 
-module.exports = React.createClass({
+module.exports = createClass({
     getInitialState: function () {
         return { _isMounted: false, search: "", records: [] };
     },

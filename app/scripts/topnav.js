@@ -1,59 +1,63 @@
 import React from 'react';
+var createClass = require('create-react-class');
 import $ from 'jquery';
 import '../css/base.css'
 import { Router, Route, browserHistory } from 'react-router';
-module.exports = React.createClass({
-	
-	getInitialState: function () {
-        return {author: '', text: ''};
+module.exports = createClass({
+
+    getInitialState: function () {
+        return { author: '', text: '' };
     },
-    getMenuItems: function() {
-    	return [
+    getMenuItems: function () {
+        return [
             {
                 navItem: "Home",
-                route:""
-            }, 
-        	{
-        		navItem: "Analysis",
-        		route: "analysis"
-        	},
+                route: ""
+            },
+            {
+                navItem: "Analysis",
+                route: "analysis"
+            },
 
-        	{
-        		navItem: "Race Archives",
-        		route: "pastraces"
-        	},
+            {
+                navItem: "Current",
+                route: "pastraces"
+            },
             {
                 navItem: "PRs",
-                route:"records"
+                route: "records"
             },
-        	{
-        		navItem: "Bugs",
-        		route: "bugs"
-        	}
-
-        	];
+            {
+                navItem: "Archives",
+                route: "archives"
+            },
+            {
+                navItem: "Bugs",
+                route: "bugs"
+            }
+        ];
     },
     componentDidMount: function () {
-    	this.state._isMounted = true;
-    	
+        this.state._isMounted = true;
+
     },
 
-    navigate: function(route) {
+    navigate: function (route) {
         browserHistory.push({
-            pathname:"/" + route,
+            pathname: "/" + route,
         });
     },
 
-	render: function() {
-		var MenuItems = this.getMenuItems().map(item => {
-			return(<a key={item.route} onClick={() => this.navigate(item.route)}>{item.navItem}</a>);
+    render: function () {
+        var MenuItems = this.getMenuItems().map(item => {
+            return (<a key={item.route} onClick={() => this.navigate(item.route)}>{item.navItem}</a>);
         });
         return (
             <div>
                 <div className="topnav">
-                  {MenuItems}
+                    {MenuItems}
                 </div>
             </div>
-            );
+        );
     }
 });

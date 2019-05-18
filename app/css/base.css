@@ -26,7 +26,8 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 code {
@@ -43,16 +44,6 @@ h1, h2, h3, h4 {
   font-weight: bold;
   margin: 0 0 15px;
   padding: 0;
-}
-
-h1 {
-  border-bottom: 1px solid #ddd;
-  font-size: 2.5em;
-}
-
-h2 {
-  border-bottom: 1px solid #eee;
-  font-size: 2em;
 }
 
 h3 {
@@ -133,6 +124,10 @@ textarea {
   width: 300px;
 }
 
+#name p, #meet p, #event p, #goal p, #searchbar p, #turnpoint p {
+  width: 500px;
+}
+
 input {
   width: auto;
 }
@@ -196,7 +191,8 @@ input {
 
 .pt-3-half {
   padding-top: 1.4rem;
-  }
+}
 
-
-
+.racecard {
+  color: #800000;
+}

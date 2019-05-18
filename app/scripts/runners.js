@@ -1,12 +1,10 @@
 import React from 'react';
 import $ from 'jquery';
-
-import CommentList from './commentList';
-import CommentForm from './commentForm';
 import TopNav from './topnav'
+var createClass = require('create-react-class');
 import { API_URL, POLL_INTERVAL } from './global';
 
-module.exports = React.createClass({
+module.exports = createClass({
     getInitialState: function() {
         return {data: [], _isMounted: false};
     },

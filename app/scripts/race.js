@@ -1,7 +1,8 @@
 import React from 'react';
 import '../css/base.css'
+var createClass = require('create-react-class');
 import { Router, Route, browserHistory } from 'react-router';
-module.exports = React.createClass({
+module.exports = createClass({
 	
 	getInitialState: function () {
         return {runner: ''};
