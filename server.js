@@ -38,6 +38,8 @@ var clearNoDate = false;
 var recoverFromBackup = false;
 var clearDuplicate = false;
 var seasonComplete = false;
+var dumpBackupToFile = false;
+var clearCurrent = false;
 
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
@@ -55,6 +57,8 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         if (clearNoDate) clearNoDates("races");
         if (recoverFromBackup) addFromBackup();
         if (clearDuplicate) clearDuplicates("races");
+        if(dumpBackupToFile) displayCollection("backup-races");
+        if(clearCurrent) clearCurrentRaces();
     }
 });
 
@@ -280,7 +284,6 @@ function clearDuplicates(database) {
 }
 
 function archiveRaces() {
-    synchronizeBackup();
     postraceDB.collection("races").find({}).toArray((err, array) => {
         if (err) {
             console.warn("Archive Failed...")
@@ -288,11 +291,38 @@ function archiveRaces() {
         } else {
             array.forEach(doc => {
                 var backupFile = doc;
+                backupFile.season = "Outdoor 2019";
                 delete backupFile._id;
-                postraceDB.collection("archives").update({ ID: doc.ID }, backupFile, { upsert: true });
+                postraceDB.collection("archives").insert(backupFile);
             });
             console.log("Archive completed successfully.")
+            
         }
     });
+}
+
+function clearCurrentRaces() {
     postraceDB.collection("races").deleteMany({});
+}
+
+function displayCollection(table) {
+    postraceDB.collection(table).find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Display Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+
+                delete doc._id;
+            })
+            require('fs').writeFile("./dump.json", JSON.stringify(array), (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                };
+                console.log("File has been created");
+            });
+            console.log("Dump completed successfully.")
+        }
+    })
 }

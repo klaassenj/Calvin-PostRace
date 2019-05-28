@@ -114,7 +114,6 @@ module.exports = createClass({
                         <Typography>
                             {thoughts}
                         </Typography>
-
                     </CardContent>
                 </Card> </a>);
         });

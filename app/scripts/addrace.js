@@ -62,8 +62,9 @@ module.exports = createClass({
             errors.push("The Meet Field must be filled out");
         }
         if (errors.length == 0) {
+            var date = Date.now();
             var race = {
-                ID: this.state.name + this.state.meet,
+                ID: this.state.name + this.state.meet + date,
                 name: this.state.name,
                 meet: this.state.meet,
                 event: this.state.event,
@@ -73,7 +74,7 @@ module.exports = createClass({
                 turnpoint: this.state.turnpoint,
                 attitude: this.state.attitude,
                 effort: this.state.effort,
-                date: Date.now()
+                date: date
             };
             console.log("Race just created")
             console.log(race);
