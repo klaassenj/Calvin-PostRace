@@ -1,7 +1,7 @@
 {
   "name": "calvinpostrace",
   "author": "jklaassen",
-  "version": "0.0.2",
+  "version": "1.0.2",
   "description": "Save thoughts on races for Calvin XCTF",
   "license": "ISC",
   "main": "server.js",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": ">=3.1.11"
   },
   "scripts": {
     "build": "webpack --progress",
