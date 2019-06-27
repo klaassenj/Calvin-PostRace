@@ -40,6 +40,7 @@ var clearDuplicate = false;
 var seasonComplete = false;
 var dumpBackupToFile = false;
 var clearCurrent = false;
+var seasonEnd = false;
 
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
@@ -50,7 +51,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
-        if(seasonComplete) archiveRaces();
+        if(seasonComplete) archiveRaces("Outdoor 2019");
         if (addID) writeNewIDs();
         if (clearNoID) clearNoIDs("backup-races");
         if (addDate) addDates();
@@ -59,6 +60,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         if (clearDuplicate) clearDuplicates("races");
         if(dumpBackupToFile) displayCollection("backup-races");
         if(clearCurrent) clearCurrentRaces();
+        if(seasonEnd) sortAndClearRaces("Outdoor 2019");
     }
 });
 
@@ -72,9 +74,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Create Endpoints
 
-// GET - /api/usernames/
+// GET - /api/races/
 app.get('/api/races', function (req, res) {
     var usernamesList = postraceDB.collection('races').find({}).toArray((err, result) => {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+// GET - /api/archives
+app.get('/api/archives', function (req, res) {
+    var usernamesList = postraceDB.collection('archives').find({}).toArray((err, result) => {
         if (err) throw err;
         res.json(result);
     });
@@ -283,7 +293,7 @@ function clearDuplicates(database) {
     });
 }
 
-function archiveRaces() {
+function archiveRaces(season) {
     postraceDB.collection("races").find({}).toArray((err, array) => {
         if (err) {
             console.warn("Archive Failed...")
@@ -291,7 +301,7 @@ function archiveRaces() {
         } else {
             array.forEach(doc => {
                 var backupFile = doc;
-                backupFile.season = "Outdoor 2019";
+                backupFile.season = season;
                 delete backupFile._id;
                 postraceDB.collection("archives").insert(backupFile);
             });
@@ -324,5 +334,41 @@ function displayCollection(table) {
             });
             console.log("Dump completed successfully.")
         }
-    })
+    });
+}
+
+function sortAndClearRaces() {
+    var promise = new Promise(resolve => setTimeout(resolve, 10))
+    promise.then(() => {
+        console.log("Get Latest Cutoff Date...");
+        findLatestSubmitDate();
+    }).then(() => {
+        console.log("Starting Backup...")
+        synchronizeBackup();
+    }).then(() => {
+        console.log("Archiving Races...")
+        //archiveRaces("Outdoor 2019")
+    }).then(() => { 
+        console.log("Cleaning Current Races")
+        postraceDB.collection("races").remove({});
+    }).then(() => {
+        console.log("Sort and Clear Complete")
+    });
+}
+
+function findLatestSubmitDate() {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if(err) {
+            console.warn("Display Failed...")
+            console.warn(err);
+        } else {
+            var latestSubmit = 0;
+            array.forEach(doc => {
+                if(doc.date > latestSubmit) {
+                    latestSubmit = doc.date
+                }
+            });
+            console.log("The latest submit date is " + latestSubmit);
+        }
+    });
 }

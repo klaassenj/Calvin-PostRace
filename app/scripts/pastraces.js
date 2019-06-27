@@ -5,12 +5,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 var createClass = require('create-react-class');
 import { Router, Route, browserHistory } from 'react-router';
-import { API_URL, POLL_INTERVAL } from './global';
+import { API_URL, POLL_INTERVAL, CURRENT_SEASON } from './global';
 import { Typography } from '@material-ui/core';
 
 module.exports = createClass({
     getInitialState: function () {
-        return { analysis: [], _isMounted: false, selectedRace: null, races: null, search: "", header: "Recently Added" };
+        return { analysis: [], _isMounted: false, selectedRace: null, races: null, search: "", header: CURRENT_SEASON, emptyMessage: "Loading Races..." };
     },
     componentDidMount: function () {
         this.state._isMounted = true;
@@ -22,7 +22,7 @@ module.exports = createClass({
     handleSearchChange: function (e) {
         this.setState({ search: e.target.value });
         if (this.state.search == "") {
-            this.setState({ header: "Recently Added" })
+            this.setState({ header: CURRENT_SEASON })
         } else {
             this.setState({ header: "Search Results" })
         }
@@ -35,12 +35,14 @@ module.exports = createClass({
                 cache: true
             })
                 .done(function (result) {
+                    if(!(result && result.length)) {
+                        this.setState({emptyMessage: "There doesn't seem to be any races yet this season..."})
+                    }
                     this.setState({ analysis: result });
-                    console.log("Content Loaded.");
-                    console.log(this.state.analysis)
                 }.bind(this))
                 .fail(function (xhr, status, errorThrown) {
                     console.error(API_URL, status, errorThrown.toString());
+                    this.setState({emptyMessage: "There was an error fetching the race data. Sorry. Check your internet settings, or submit a bug report."})
                 }.bind(this));
         }
     },
@@ -131,6 +133,7 @@ module.exports = createClass({
                         />
                     </div>
                     <h3> {this.state.header} </h3>
+                    <p> { this.state.emptyMessage } </p>
                     <div id="racelist">
                         {this.state.races}
                     </div>

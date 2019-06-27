@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import { Router, Route, browserHistory } from 'react-router';
-import { API_URL, POLL_INTERVAL } from './global';
+import { API_URL, API_ARCHIVES_URL, CURRENT_SEASON } from './global';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 var createClass = require('create-react-class');
@@ -21,9 +21,10 @@ module.exports = createClass({
         this.setState(
             {
                 seasons: [
-                    "Outdoor 2019"
+                    "Outdoor 2019",
+                    "Summer 2019"
                 ],
-                currentSeason: "Outdoor 2019"
+                currentSeason: CURRENT_SEASON
             }
         );
     },
@@ -39,7 +40,7 @@ module.exports = createClass({
     loadAnalysisFromServer: function () {
         if (this.state._isMounted) {
             $.ajax({
-                url: "/api/races",
+                url: API_ARCHIVES_URL,
                 dataType: 'json',
                 cache: true
             })
@@ -83,7 +84,6 @@ module.exports = createClass({
     },
     chooseSeason: function (season) {
         this.setState({ currentSeason: season });
-        console.log("Currently Chosen Season is " + season);
         //AJAX Request for only archives of that season
     },
     createHTML: function () {
@@ -122,7 +122,7 @@ module.exports = createClass({
         this.state.races = this.createHTML();
         var Radios = this.state.seasons.map(season => {
             return (
-                <Tab id={season} onClick={() => this.chooseSeason(season)} name={season} label={season} value={season} />
+                <Tab key={season} id={season} onClick={() => this.chooseSeason(season)} name={season} label={season} value={season} />
             );
         });
         const { value } = this.state;

@@ -109,7 +109,21 @@ module.exports = createClass({
     getEventChoices: function () {
         //AJAX Call
         var events = [
-            "Event", "5000m", "3000m", "1500m", "Steeple", "10000m", "Mile", "1600m", "800m", "400m", "2000m", "400m Split"
+            "Event", 
+            "5000m",
+            "8k", 
+            "3000m", 
+            "1500m", 
+            "Steeple", 
+            "10000m", 
+            "Mile",
+            "15k",
+            "7 Mile",
+            "1600m", 
+            "800m", 
+            "400m", 
+            "2000m", 
+            "400m Split",
         ]
 
         return events.map(event => {

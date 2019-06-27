@@ -8,15 +8,16 @@ module.exports = createClass({
     getInitialState: function() {
         return {data: [], _isMounted: false, bugdesc: "", name: "", submitted:""};
     },
+    insectList: function() {
+        return ["beetle", "ant", "fly", "bee", "termite", "cricket", 
+        "butterfly", "grasshopper", "dragonfly", "mantis", "flea", "true bugs", 
+        "ladybug", "tyler", "housefly", "louse", "cicada", "silverfish", "UBH", 
+        "ubh", "scare", "scared", "scary", "hairy", "giant bug", "gross"]
+    },
     componentDidMount: function() {
         this.state._isMounted = true;
     },
     componentWillUnmount: function() {
-        // Reset the isMounted flag so that the loadCommentsFromServer callback
-        // stops requesting state updates when the commentList has been unmounted.
-        // This switch is optional, but it gets rid of the warning triggered by
-        // setting state on an unmounted component.
-        // See https://reactjs.org/blog/2015/12/16/ismounted-antipattern.html
         this.state._isMounted = false;
     },
     handleBugChange: function(e) {
@@ -27,9 +28,21 @@ module.exports = createClass({
     },
     handleSubmit: function(e) {
         e.preventDefault();
+        var isTyler = false;
+        console.log(this.state.bugdesc)
+        this.insectList().forEach(bug => {
+            console.log(bug)
+            if(new RegExp("\\b" + bug + "\\b").test(this.state.bugdesc)) {
+                isTyler = true;
+            }
+        });
+        console.log(isTyler)
+        
         var bug = { name : this.state.name,
                     bugdesc : this.state.bugdesc,
                  };
+        var message = isTyler ? "has failed successfully." : "Successful.";
+        if(isTyler) alert("I'm sorry that bug report will not be processed because you're being an idiot, Tyler.") 
         $.ajax({
             url: API_BUGS_URL,
             dataType: 'json',
@@ -37,8 +50,8 @@ module.exports = createClass({
             data: bug,
         })
          .done(function(result){
-             console.log(result);
-             this.setState({submitted: "Bug Submission Successful."})
+             this.setState({submitted: "Bug Submission " + message})
+             
          }.bind(this))
          .fail(function(xhr, status, errorThrown) {
              console.error(xAPI_URL, status, errorThrown.toString());
@@ -62,7 +75,7 @@ module.exports = createClass({
                         id="desc"
                         type="text"
                         className="widetextarea"
-                        placeholder="Describe the bug you encountered. Be specific."
+                        placeholder="Describe the bug you encountered or possible improvement for the site. Be specific."
                         value={this.state.bugdesc}
                         rows="10"
                         onChange={this.handleBugChange}

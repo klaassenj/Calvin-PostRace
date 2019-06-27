@@ -20,12 +20,14 @@ module.exports = createClass({
     render: function () {
         return (
             <div>
-                <h1> Welcome to Calvin Post Race Analysis! </h1>
+                <h1> Welcome to Calvin University Post Race Analysis! </h1>
                 <TopNav></TopNav>
-                <p> Click the Analysis tab to fill out your post race form. </p>
-                <p> Click the Current tab to see recent analysis by your teammates. </p>
-                <p> Click the Archives tab to see race analysis from past seasons. </p>
-                <p> Click the Bugs tab to report a bug or suggest an improvement </p>
+                <h2> What would you like to do? </h2>
+                <p> To write analysis about a race, click the "Analysis" tab</p>
+                <p> To see current season analysis from teammates, click the "Current" tab</p>
+                <p> To see past analysis from teammates and alumni, click the "Archives" tab</p>
+                <p> To view and submit PRs for the athletes, click the "PRs" tab</p>
+                <p> If you've seen a glitch in the site or room for improvement for the site, click the "Feedback" tab</p>
                 <h2> Development News</h2>
                 <p> Seperation of Current vs Archived Analysis </p>
                 <p> Some Design Enhancements </p>

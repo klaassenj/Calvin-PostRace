@@ -32,7 +32,7 @@ module.exports = createClass({
                 route: "archives"
             },
             {
-                navItem: "Bugs",
+                navItem: "Feedback",
                 route: "bugs"
             }
         ];
