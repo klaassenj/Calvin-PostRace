@@ -6,14 +6,14 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import { Router, Route, browserHistory } from 'react-router';
-import { API_URL, API_ARCHIVES_URL, CURRENT_SEASON } from './global';
+import { API_URL, API_ARCHIVES_URL } from './global';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 var createClass = require('create-react-class');
 
 module.exports = createClass({
     getInitialState: function () {
-        return { analysis: [], _isMounted: false, currentSeason: "", selectedRace: null, races: null, search: "", header: "Archived Race Analysis", seasons: [] };
+        return { analysis: [], _isMounted: false, currentSeason: "All Seasons", selectedRace: null, races: null, search: "", header: "Archived Race Analysis", seasons: [] };
     },
     componentDidMount: function () {
         this.state._isMounted = true;
@@ -21,21 +21,19 @@ module.exports = createClass({
         this.setState(
             {
                 seasons: [
+                    "All Seasons",
                     "Outdoor 2019",
                     "Summer 2019"
-                ],
-                currentSeason: CURRENT_SEASON
+                ]
             }
         );
+        
     },
     componentWillUnmount: function () {
         this.state._isMounted = false;
     },
     handleSearchChange: function (e) {
         this.setState({ search: e.target.value });
-    },
-    handleSearchSeasonChange: function (e) {
-        this.setState({ searchSeason: e.target.value });
     },
     loadAnalysisFromServer: function () {
         if (this.state._isMounted) {
@@ -84,7 +82,6 @@ module.exports = createClass({
     },
     chooseSeason: function (season) {
         this.setState({ currentSeason: season });
-        //AJAX Request for only archives of that season
     },
     createHTML: function () {
         var relevantResults = this.state.analysis.filter(analysis => {
@@ -94,10 +91,13 @@ module.exports = createClass({
                 return this.searchSuccessful(analysis);
             }
         });
+        if(this.state.currentSeason != "All Seasons") {
+            relevantResults = relevantResults.filter(element => element.season == this.state.currentSeason)
+        }
         // Sorts results by date and places the latest results at the top
         relevantResults.sort((a, b) => parseFloat(b.date) - parseFloat(a.date));
         return relevantResults.map(analysis => {
-            var key = analysis.name + analysis.meet + Math.random(1000);
+            var key = analysis.name + analysis.meet + Math.random(100);
             var clickFuntion = () => this.navigate(analysis);
             var words = analysis.thoughts.substr(0, 40).split(" ");
             words.pop();
@@ -125,23 +125,13 @@ module.exports = createClass({
                 <Tab key={season} id={season} onClick={() => this.chooseSeason(season)} name={season} label={season} value={season} />
             );
         });
-        const { value } = this.state;
         return (
             <div>
                 <h1>Race Analysis Archives </h1>
                 <TopNav></TopNav>
                 <div className="container">
-                    <div id="searchbar">
-                        <input
-                            id="name"
-                            type="text"
-                            placeholder="Search All Seasons..."
-                            onChange={this.handleSearchChange}
-                        />
-                    </div>
                     <Tabs
                         value={this.state.currentSeason}
-                        onChange={this.chooseSeason}
                         indicatorColor="primary"
                         textColor="primary"
                         variant="scrollable"
@@ -154,7 +144,7 @@ module.exports = createClass({
                             id="name"
                             type="text"
                             placeholder={ "Search " + this.state.currentSeason + "..." }
-                            onChange={this.handleSearchSeasonChange}
+                            onChange={this.handleSearchChange}
                         />
                     </div>
                     <div id="racelist">

@@ -1,6 +1,6 @@
 {
-  "name": "React Tutorial Server",
-  "description": "Code from the React tutorial",
+  "name": "Calvin Post Race",
+  "description": "Create, share, and view post race analysis ",
   "keywords": [ "react", "reactjs", "tutorial" ],
   "repository": "https://github.com/reactjs/react-tutorial",
   "logo": "https://facebook.github.io/react/img/logo.svg",

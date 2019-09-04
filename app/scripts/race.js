@@ -42,6 +42,20 @@ module.exports = createClass({
         });
     },
 
+    // <Card className="racecard" raised={true} >
+    //                 <CardContent>
+    //                     <Typography variant="headline" color="primary">
+    //                         {analysis.name}
+    //                     </Typography>
+    //                     <Typography variant="title">
+    //                         {analysis.meet} {analysis.event}
+    //                     </Typography>
+    //                     <Typography>
+    //                         {thoughts}
+    //                     </Typography>
+    //                 </CardContent>
+    //             </Card>
+
 	render: function() {
 		var MeetAndEvent = (<p id="meet"> { this.state.meet} { this.state.event }</p>);
         var Name = (<p id="name"> {this.state.name}</p>);

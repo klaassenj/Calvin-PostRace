@@ -39,6 +39,7 @@ module.exports = createClass({
                         this.setState({emptyMessage: "There doesn't seem to be any races yet this season..."})
                     }
                     this.setState({ analysis: result });
+                    this.setState({ emptyMessage: "" });
                 }.bind(this))
                 .fail(function (xhr, status, errorThrown) {
                     console.error(API_URL, status, errorThrown.toString());

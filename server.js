@@ -20,6 +20,7 @@ var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+
 // MongoDB variables
 var username = 'admin'
 var password = process.env.MONGO_PASSWORD
@@ -37,10 +38,12 @@ var addDate = false;
 var clearNoDate = false;
 var recoverFromBackup = false;
 var clearDuplicate = false;
-var seasonComplete = false;
 var dumpBackupToFile = false;
 var clearCurrent = false;
+var seasonComplete = false;
 var seasonEnd = false;
+var writeSeason = false;
+
 
 //Connect to Mongo Database
 mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
@@ -51,7 +54,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
-        if(seasonComplete) archiveRaces("Outdoor 2019");
+        if(seasonComplete) archiveRaces("Summer 2019");
         if (addID) writeNewIDs();
         if (clearNoID) clearNoIDs("backup-races");
         if (addDate) addDates();
@@ -61,6 +64,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         if(dumpBackupToFile) displayCollection("backup-races");
         if(clearCurrent) clearCurrentRaces();
         if(seasonEnd) sortAndClearRaces("Outdoor 2019");
+        if(writeSeason) setSeason("XC 2019")
     }
 });
 
@@ -107,14 +111,14 @@ app.post('/api/races', function (req, res, next) {
     });
 });
 
-// DELETE - /api/races
-app.delete('/api/races', function (req, res, next) {
-    try {
-        postraceDB.collection('races').delete(req.body);
-    } catch (e) {
-        console.warn(e);
-    }
-});
+// // DELETE - /api/races
+// app.delete('/api/races', function (req, res, next) {
+//     try {
+//         postraceDB.collection('races').delete(req.body);
+//     } catch (e) {
+//         console.warn(e);
+//     }
+// });
 
 // POST - /api/bugs
 app.post('/api/bugs', function (req, res, next) {
@@ -169,6 +173,23 @@ function synchronizeBackup() {
         }
     });
 };
+
+function setSeason(seasonName) {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if (err) {
+            console.warn("Recovery Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                var file = doc;
+                delete file._id;
+                file.season = seasonName;
+                postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
+            });
+            console.log("Season set completed successfully.")
+        }
+    });
+}
 
 function addFromBackup() {
     postraceDB.collection("backup-races").find({}).toArray((err, array) => {
@@ -300,10 +321,10 @@ function archiveRaces(season) {
             console.warn(err);
         } else {
             array.forEach(doc => {
-                var backupFile = doc;
-                backupFile.season = season;
-                delete backupFile._id;
-                postraceDB.collection("archives").insert(backupFile);
+                if(doc.event != "8k") {
+                    postraceDB.collection("races").remove(doc);
+                }
+                
             });
             console.log("Archive completed successfully.")
             

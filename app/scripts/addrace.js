@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
-import { API_URL, POLL_INTERVAL } from './global';
+import { API_URL, POLL_INTERVAL, EVENTS } from './global';
 var createClass = require('create-react-class');
 
 module.exports = createClass({
@@ -51,6 +51,9 @@ module.exports = createClass({
     handleSubmit: function (e) {
         e.preventDefault();
         var errors = [];
+        if(this.state.submitted != "" && !this.state.submitted.startsWith("Submission Failed")) {
+            return;
+        }
 
         if (this.state.event == undefined || this.state.event == "Event") {
             errors.push("The Event Field must be filled out.");
@@ -94,6 +97,7 @@ module.exports = createClass({
                     console.log("Entry to Database Received")
                     console.log(result);
                     this.setState({ submitted: "Submission Successful." });
+                    $('#submitwrapper').hide();
                 }.bind(this))
                 .fail(function (xhr, status, errorThrown) {
                     console.error(xAPI_URL, status, errorThrown.toString());
@@ -108,25 +112,9 @@ module.exports = createClass({
     },
     getEventChoices: function () {
         //AJAX Call
-        var events = [
-            "Event", 
-            "5000m",
-            "8k", 
-            "3000m", 
-            "1500m", 
-            "Steeple", 
-            "10000m", 
-            "Mile",
-            "15k",
-            "7 Mile",
-            "1600m", 
-            "800m", 
-            "400m", 
-            "2000m", 
-            "400m Split",
-        ]
+        
 
-        return events.map(event => {
+        return EVENTS.map(event => {
             return (<option key={event} value={event}> {event} </option>)
         });
         //var confirmation = (<p> Thank you for completing your post race analysis! </p>)
@@ -208,7 +196,7 @@ module.exports = createClass({
                     />
 
                     <div className="row submitbutton">
-                        <input type="submit" value="Post" />
+                        <div id="submitwrapper"><input type="submit" value="Post" /></div>
                         <p id="submitted"> {this.state.submitted} </p>
                     </div>
 
