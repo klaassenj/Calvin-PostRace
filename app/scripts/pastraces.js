@@ -1,11 +1,12 @@
 import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+
 var createClass = require('create-react-class');
 import { Router, Route, browserHistory } from 'react-router';
 import { API_URL, POLL_INTERVAL, CURRENT_SEASON } from './global';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 
 module.exports = createClass({
