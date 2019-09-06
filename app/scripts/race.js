@@ -85,7 +85,7 @@ module.exports = createClass({
                             {Goal}
                             {AE}
                         </div>
-                    </div>a
+                    </div>
                 </div>
             </div>
         );
