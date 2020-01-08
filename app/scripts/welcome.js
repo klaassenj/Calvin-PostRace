@@ -29,6 +29,8 @@ module.exports = createClass({
                 {/* <p> To view and submit PRs for the athletes, click the "PRs" tab</p> */}
                 <p> If you've seen a glitch in the site or room for improvement for the site, click the "Feedback" tab</p>
                 <h2> Development News</h2>
+                <p> <b> 1/8/2020 </b></p>
+                <p> Switching into indoor season. Some backend changes. </p>
                 <p> <b> 9/3/19 </b> </p>
                 <p> Tried to make the interface a little more user friendly. Let me know if you like the changes. </p>
                 <p> Archives Page Redesigned </p>

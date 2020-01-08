@@ -1,46 +1,32 @@
-const API_URL = "/api/races";
-const API_ARCHIVES_URL = "/api/archives";
-const API_BUGS_URL = "/api/bugs";
-const POLL_INTERVAL = 2000;
-const CURRENT_SEASON = "XC 2019";
+export const API_URL = "/api/races";
+export const API_ARCHIVES_URL = "/api/archives";
+export const API_BUGS_URL = "/api/bugs";
+export const POLL_INTERVAL = 2000;
+export const CURRENT_SEASON = "Indoor 2020";
 
-const SCHEDULED_RACES = [
-    "Vanderbilt Invite",
-    "Knight Invite",
-    "Michigan State Invite",
-    "GRCC Raider Invite",
-    "Notre Dame Invite",
-    "Lansing Invite",
-    "Oshkosh Invite",
-    "Muskegon Jayhawk Invite",
-    "Prairie Wolf Invite",
-    "Conference",
-    "Regionals",
-    "Nationals"
-]
+export const SEASONS = [
+    "All Seasons",
+    "Indoor 2020",
+    "XC 2019",
+    "Summer 2019",
+    "Outdoor 2019",
+];
 
-const EVENTS = [
+export const EVENTS = [
     "Event", 
     "5000m",
     "8k", 
-    "3000m", 
     "1500m", 
-    "Steeple", 
-    "10000m", 
     "Mile",
+    "3000m", 
+    "10000m",
+    "Steeple", 
+    "1600m", 
+    "800m",
+    "400m",
+    "400m Split",
+    "1000m",
     "15k",
     "7 Mile",
-    "1600m", 
-    "800m", 
-    "400m", 
     "2000m", 
-    "400m Split",
 ]
-if(process.env.GENDER == "womens") {
-    EVENTS.forEach(event => {
-        if(event == "8k") event = "6k"
-    });
-}
-
-
-module.exports = {API_URL, API_BUGS_URL, POLL_INTERVAL, CURRENT_SEASON, API_ARCHIVES_URL, EVENTS, SCHEDULED_RACES };

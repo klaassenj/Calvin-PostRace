@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import { Router, Route, browserHistory } from 'react-router';
-import { API_URL, API_ARCHIVES_URL } from './global';
+import { API_URL, API_ARCHIVES_URL, SEASONS } from './global';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 var createClass = require('create-react-class');
@@ -18,15 +18,7 @@ module.exports = createClass({
     componentDidMount: function () {
         this.state._isMounted = true;
         this.loadAnalysisFromServer();
-        this.setState(
-            {
-                seasons: [
-                    "All Seasons",
-                    "Outdoor 2019",
-                    "Summer 2019"
-                ]
-            }
-        );
+        this.setState( { seasons: SEASONS } );
         
     },
     componentWillUnmount: function () {

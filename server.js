@@ -32,17 +32,9 @@ var mclient = require('mongodb').MongoClient
 
 // Maintenance Flags
 var sync = false;
-var addID = false;
-var clearNoID = false;
-var addDate = false;
-var clearNoDate = false;
 var recoverFromBackup = false;
-var clearDuplicate = false;
 var dumpBackupToFile = false;
-var clearCurrent = false;
-var seasonComplete = false;
-var seasonEnd = false;
-var writeSeason = false;
+var archive = false;
 
 
 //Connect to Mongo Database
@@ -54,17 +46,9 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
-        if(seasonComplete) archiveRaces("Summer 2019");
-        if (addID) writeNewIDs();
-        if (clearNoID) clearNoIDs("backup-races");
-        if (addDate) addDates();
-        if (clearNoDate) clearNoDates("races");
+        if (archive) archiveRaces("XC 2019");
         if (recoverFromBackup) addFromBackup();
-        if (clearDuplicate) clearDuplicates("races");
-        if(dumpBackupToFile) displayCollection("backup-races");
-        if(clearCurrent) clearCurrentRaces();
-        if(seasonEnd) sortAndClearRaces("Outdoor 2019");
-        if(writeSeason) setSeason("XC 2019")
+        if (dumpBackupToFile) displayCollection("races");
     }
 });
 
@@ -207,132 +191,21 @@ function addFromBackup() {
     });
 }
 
-function writeNewIDs() {
-    postraceDB.collection("races").find({}).toArray((err, array) => {
-        if (err) {
-            console.warn("writing new IDs Failed...")
-            console.warn(err);
-        } else {
-            array.forEach(doc => {
-                console.log("Updating Doc " + doc.name + " " + doc.meet)
-                if (doc.ID == undefined) {
-                    var addID = doc;
-                    delete addID._id;
-                    addID.ID = doc.name + doc.meet
-                    console.log("New Doc");
-                    console.log(addID.ID + "\n" + addID.name + "\n" + addID.meet)
-                    postraceDB.collection("races").update(doc, addID, { upsert: true })
-                }
-            })
-            console.log("Writing New IDs Successful.")
-        }
-    });
-}
-
-function addDates() {
-    postraceDB.collection("races").find({}).toArray((err, array) => {
-        if (err) {
-            console.warn("Add Date failed")
-            console.warn(err);
-        } else {
-            array.forEach(doc => {
-                if (doc.date == undefined) {
-                    var newDoc = doc;
-                    delete newDoc._id;
-                    newDoc.date = Date.now();
-                    console.log("Adding Date to " + doc.name + " " + doc.meet)
-                    postraceDB.collection("races").update({ ID: doc.ID }, newDoc);
-                }
-            });
-            console.log("Date Adding Sucessful.");
-        }
-    });
-}
-
-function clearNoIDs(database) {
-    postraceDB.collection(database).find({}).toArray((err, array) => {
-        if (err) {
-            console.warn("Clear Failed...")
-            console.warn(err);
-        } else {
-            array.forEach(doc => {
-                console.log("New Doc");
-                console.log(doc.ID + "\n" + doc.name + "\n" + doc.meet)
-                if (doc.ID == undefined) {
-                    console.log("Deleting " + doc.name + " " + doc.meet)
-                    postraceDB.collection(database).remove(doc)
-                } else {
-                    console.log("No Action Needed.")
-                }
-            })
-            console.log("Clear Successful.")
-        }
-    });
-}
-
-function clearNoDates(database) {
-    postraceDB.collection(database).find({}).toArray((err, array) => {
-        if (err) {
-            console.warn("Clear Failed...")
-            console.warn(err);
-        } else {
-            array.forEach(doc => {
-                console.log("New Doc");
-                console.log(doc.date + "\n" + doc.name + "\n" + doc.meet)
-                if (doc.date == undefined) {
-                    console.log("Deleting " + doc.name + " " + doc.meet)
-                    postraceDB.collection(database).remove(doc)
-                } else {
-                    console.log("No Action Needed.")
-                }
-            })
-            console.log("Clear Successful.")
-        }
-    });
-}
-
-function clearDuplicates(database) {
-    postraceDB.collection(database).find({}).toArray((err, array) => {
-        if (err) {
-            console.warn("Duplicate Clear Failed...")
-            console.warn(err);
-        } else {
-            var duplicates = [];
-            array.forEach(doc => {
-                console.log("New Doc");
-                console.log(doc.date + "\n" + doc.name + "\n" + doc.meet)
-                if (duplicates.includes(doc.ID)) {
-                    console.log("Deleting Copy of" + doc.name + " " + doc.meet)
-                    postraceDB.collection(database).remove(doc)
-                } else {
-                    duplicates.push(doc.ID);
-                    console.log("No Action Needed.")
-                }
-            })
-            console.log("Duplicate Clear Successful.")
-        }
-    });
-}
-
 function archiveRaces(season) {
+    setSeason(season);
     postraceDB.collection("races").find({}).toArray((err, array) => {
         if (err) {
             console.warn("Archive Failed...")
             console.warn(err);
         } else {
             array.forEach(doc => {
-                if(doc.event != "8k") {
-                    postraceDB.collection("races").remove(doc);
-                }
                 
+                postraceDB.collection("archives").update({ ID: doc.ID }, doc, { upsert: true });
             });
             console.log("Archive completed successfully.")
             
         }
     });
-}
-
-function clearCurrentRaces() {
     postraceDB.collection("races").deleteMany({});
 }
 
@@ -355,25 +228,6 @@ function displayCollection(table) {
             });
             console.log("Dump completed successfully.")
         }
-    });
-}
-
-function sortAndClearRaces() {
-    var promise = new Promise(resolve => setTimeout(resolve, 10))
-    promise.then(() => {
-        console.log("Get Latest Cutoff Date...");
-        findLatestSubmitDate();
-    }).then(() => {
-        console.log("Starting Backup...")
-        synchronizeBackup();
-    }).then(() => {
-        console.log("Archiving Races...")
-        //archiveRaces("Outdoor 2019")
-    }).then(() => { 
-        console.log("Cleaning Current Races")
-        postraceDB.collection("races").remove({});
-    }).then(() => {
-        console.log("Sort and Clear Complete")
     });
 }
 
