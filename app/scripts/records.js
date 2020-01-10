@@ -6,6 +6,7 @@ import { API_URL, POLL_INTERVAL } from './global';
 var createClass = require('create-react-class');
 import { API_RECORDS } from "./global";
 import MaterialTable from "material-table";
+import PRTable from "./table";
 
 import { forwardRef } from 'react';
 
@@ -48,10 +49,8 @@ const tableIcons = {
 
 module.exports = createClass({
     getInitialState: function () {
-        return { _isMounted: false, 
-            search: "", 
-            records: [], 
-            headers: ["Name", "1500m", "5k", "10k"],
+        return { _isMounted: false,
+            records: [],
             columns: [
                 { title: "Name", field: "name" },
                 { title: "1500m", field: "fifteen" },
@@ -67,9 +66,6 @@ module.exports = createClass({
     componentWillUnmount: function () {
         this.state._isMounted = false;
     },
-    handleSearchChange: function (e) {
-        this.setState({ search: e.target.value });
-    },
     loadPersonalRecords: function () {
         if (this.state._isMounted) {
             $.ajax({
@@ -80,26 +76,23 @@ module.exports = createClass({
                 .done(function (loadedRecords) {
                     this.setState({ records: loadedRecords })
                     console.log("Content Loaded.");
-                    console.log(this.state.records)
+                    console.log(this.state.records);
                 }.bind(this))
                 .fail(function (xhr, status, errorThrown) {
-                    console.error(API_URL, status, errorThrown.toString());
+                    console.error(API_RECORDS, status, errorThrown.toString());
                 }.bind(this));
         }
     },
     render: function () {
+        console.log("Render records page")
+        console.log(this.state);
         return (
             <div>
                 <h1>Welcome to the PR Page!</h1>
                 <TopNav></TopNav>
                 <div className="container">
                     <div className="noTouching" style={{ maxWidth: "100%" }}>
-                        <MaterialTable
-                            icons={tableIcons}
-                            columns={this.state.columns}
-                            data={this.state.records}
-                            title="PRs"
-                        />
+                        <PRTable columns={this.state.columns} data={this.state.records}/>
                     </div>
                 </div>
             </div>

@@ -136,7 +136,7 @@ app.post('/api/records', function (req, res, next) {
             res.statusCode = 200;
             res.send({ result: "Successful Update", body: req.body, dup: duplicates });
         } else {
-            postraceDB.collection('bugs').insert(req.body);
+            postraceDB.collection('records').insert(req.body);
             res.statusCode = 200;
             res.send({ result: "Successful Insert", body: req.body, dup: duplicates });
         }
