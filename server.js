@@ -78,6 +78,14 @@ app.get('/api/archives', function (req, res) {
     });
 });
 
+// GET - /api/records
+app.get('/api/records', function (req, res) {
+    postraceDB.collection('records').find({}).toArray((err, result) => {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
 // POST - /api/races/
 app.post('/api/races', function (req, res, next) {
     postraceDB.collection('races').find({}).toArray((err, array) => {
@@ -119,6 +127,22 @@ app.post('/api/bugs', function (req, res, next) {
         }
     });
 });
+
+app.post('/api/records', function (req, res, next) {
+    postraceDB.collection('records').find({}).toArray((err, array) => {
+        var duplicates = array.filter(item => item.name == req.body.name);
+        if (duplicates.length > 0) {
+            postraceDB.collection('records').update(req.body);
+            res.statusCode = 200;
+            res.send({ result: "Successful Update", body: req.body, dup: duplicates });
+        } else {
+            postraceDB.collection('bugs').insert(req.body);
+            res.statusCode = 200;
+            res.send({ result: "Successful Insert", body: req.body, dup: duplicates });
+        }
+    });
+});
+
 
 // Add Headers to responses
 app.use(function (req, res, next) {

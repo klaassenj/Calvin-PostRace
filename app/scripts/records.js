@@ -4,21 +4,65 @@ import $ from 'jquery';
 import TopNav from './topnav';
 import { API_URL, POLL_INTERVAL } from './global';
 var createClass = require('create-react-class');
-import Record from './record';
-import { Table, TableRow, TableCell, TableBody, TableHead } from '@material-ui/core';
+import { API_RECORDS } from "./global";
+import MaterialTable from "material-table";
+
+import { forwardRef } from 'react';
+
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+
+const tableIcons = {
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+  };
+
 
 module.exports = createClass({
     getInitialState: function () {
-        return { _isMounted: false, search: "", records: [] };
+        return { _isMounted: false, 
+            search: "", 
+            records: [], 
+            headers: ["Name", "1500m", "5k", "10k"],
+            columns: [
+                { title: "Name", field: "name" },
+                { title: "1500m", field: "fifteen" },
+                { title: "5k", field: "five" },
+                { title: "10k", field: "ten" }
+            ] };
     },
-    componenTableCellidMount: function () {
-        this.state.records.push({
-            name: "Charlie Kornoelje",
-            five: "15:58",
-            ten: "33:06",
-            fifteen: "4:17"
-        });
-        this.setState({ isMounted: true });
+    componentDidMount: function () {
+        console.log("Mounted");
+        this.state._isMounted = true;
+        this.loadPersonalRecords();
     },
     componentWillUnmount: function () {
         this.state._isMounted = false;
@@ -29,7 +73,7 @@ module.exports = createClass({
     loadPersonalRecords: function () {
         if (this.state._isMounted) {
             $.ajax({
-                url: "/api/records",
+                url: API_RECORDS,
                 dataType: 'json',
                 cache: true
             })
@@ -43,52 +87,20 @@ module.exports = createClass({
                 }.bind(this));
         }
     },
-    createHtml: function () {
-        return this.state.records.map(record => {
-            return (<Record
-                name={record.name}
-                fifteen={record.fifteen}
-                five={record.five}
-                ten={record.ten}
-                steeple={record.steeple}
-            ></Record>);
-        })
-    },
-    createRows: function () {
-        return this.state.records.map(record => {
-            return (
-                <TableRow>
-                    <TableCell className="pt-3-half" contentEditable="false">{record.name}</TableCell>
-                    <TableCell className="pt-3-half" contentEditable="true">{record.fifteen}</TableCell>
-                    <TableCell className="pt-3-half" contentEditable="true">{record.five}</TableCell>
-                    <TableCell className="pt-3-half" contentEditable="true">{record.ten}</TableCell>
-                    <TableCell className="pt-3-half" contentEditable="true">{record.steeple}</TableCell>
-                </TableRow>
-            );
-        });
-    },
     render: function () {
-        var Records = this.createHtml();
-        var tableRows = this.createRows();
         return (
             <div>
                 <h1>Welcome to the PR Page!</h1>
                 <TopNav></TopNav>
                 <div className="container">
-                    <div id="searchbar">
-                        <input
-                            id="name"
-                            type="text"
-                            placeholder="Search..."
-                            onChange={this.handleSearchChange}
+                    <div className="noTouching" style={{ maxWidth: "100%" }}>
+                        <MaterialTable
+                            icons={tableIcons}
+                            columns={this.state.columns}
+                            data={this.state.records}
+                            title="PRs"
                         />
                     </div>
-                    <Table>
-                        <TableHead>PRs</TableHead>
-                        <TableBody>
-                            { tableRows }
-                        </TableBody>
-                    </Table>
                 </div>
             </div>
         );
