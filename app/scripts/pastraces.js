@@ -8,10 +8,14 @@ import { API_URL, POLL_INTERVAL, CURRENT_SEASON } from './global';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 module.exports = createClass({
     getInitialState: function () {
-        return { analysis: [], _isMounted: false, selectedRace: null, races: null, search: "", header: CURRENT_SEASON, emptyMessage: "Loading Races..." };
+        return { analysis: [], _isMounted: false, selectedRace: null, 
+            races: null, search: "", header: CURRENT_SEASON, emptyMessage: "Loading Races...",
+            groups: [ "All Athletes", "Distance", "Mid-Distance"], group: "All Athletes" };
     },
     componentDidMount: function () {
         this.state._isMounted = true;
@@ -27,6 +31,9 @@ module.exports = createClass({
         } else {
             this.setState({ header: "Search Results" })
         }
+    },
+    chooseGroup: function(group) {
+        this.setState({group: group});
     },
     loadAnalysisFromServer: function () {
         if (this.state._isMounted) {
@@ -121,6 +128,21 @@ module.exports = createClass({
     },
     render: function () {
         this.state.races = this.createHTML();
+        var Radios = this.state.groups.map(group => {
+            return (
+                <Tab key={group} id={group} onClick={() => this.chooseGroup(group)} name={group} label={group} value={group} />
+            );
+        });
+        var TabNav = (<Tabs
+                            value={this.state.group}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="scrollable"
+                            scrollButtons="auto"
+                        >
+                        {Radios}
+                        </Tabs>
+        );
         return (
             <div>
                 <h1>Current Season Race Analysis</h1>

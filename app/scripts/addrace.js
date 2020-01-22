@@ -1,13 +1,19 @@
 import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
-import { API_URL, POLL_INTERVAL, EVENTS } from './global';
+import { API_URL, POLL_INTERVAL, EVENTS, CURRENT_SEASON } from './global';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 var createClass = require('create-react-class');
 
 module.exports = createClass({
 
     getInitialState: function () {
-        return { data: [], _isMounted: false, submitted: "", editing: false, ID: "" };
+        return { data: [], _isMounted: false, submitted: "", editing: false, ID: "", 
+        groups: [ "Distance", "Mid-Distance", "Other"], group: "Distance" };
     },
     componentDidMount: function () {
         this.state._isMounted = true;
@@ -29,6 +35,10 @@ module.exports = createClass({
     },
     handleEventChange: function (e) {
         this.setState({ event: e.target.value });
+    },
+    handleGroupChange: function (e) {
+        console.log(e.target.value)
+        this.setState({group: e.target.value})
     },
     handleThoughtsChange: function (e) {
         this.setState({ thoughts: e.target.value });
@@ -71,13 +81,15 @@ module.exports = createClass({
                 name: this.state.name,
                 meet: this.state.meet,
                 event: this.state.event,
+                group: this.state.group,
                 thoughts: this.state.thoughts,
                 positives: this.state.positives,
                 goal: this.state.goal,
                 turnpoint: this.state.turnpoint,
                 attitude: this.state.attitude,
                 effort: this.state.effort,
-                date: date
+                date: date,
+                season: CURRENT_SEASON
             };
             console.log("Race just created")
             console.log(race);
@@ -111,16 +123,29 @@ module.exports = createClass({
 
     },
     getEventChoices: function () {
-        //AJAX Call
-        
-
         return EVENTS.map(event => {
             return (<option key={event} value={event}> {event} </option>)
         });
-        //var confirmation = (<p> Thank you for completing your post race analysis! </p>)
     },
     render: function () {
-
+        var Groups = this.state.groups.map(group =>{
+            return (
+                <FormControlLabel
+                    value={group}
+                    control={<Radio color="primary" />}
+                    label={group}
+                    labelPlacement="end"
+                    key={group}
+                />
+            )
+        })
+        var SelectGroup = (<div style={{margin: 20}}><FormControl component="fieldset">
+                                <RadioGroup aria-label="position" name="position" value={this.state.group} onChange={this.handleGroupChange} row>
+                                { Groups }
+                                </RadioGroup>
+                            </FormControl>
+                            </div>
+        );
         return (
             <div>
                 <h1>Analysis Upload</h1>
@@ -141,6 +166,7 @@ module.exports = createClass({
                         value={this.state.meet}
                         onChange={this.handleMeetChange}
                     />
+                    { SelectGroup }                   
                     <select id="event" name="dropdown" onChange={this.handleEventChange}>
                         {this.getEventChoices()}
                     </select>

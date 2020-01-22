@@ -54,6 +54,9 @@ module.exports = createClass({
             columns: [
                 { title: "Name", field: "name" },
                 { title: "1500m", field: "fifteen" },
+                { title: "Mile", field: "mile"},
+                { title: "3000m", field: "three"},
+                { title: "3k Steeple", field: "steeple"},
                 { title: "5k", field: "five" },
                 { title: "10k", field: "ten" }
             ] };

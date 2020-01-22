@@ -77,6 +77,7 @@ module.exports = createClass({
                                     this.setState(prevState => {
                                         const data = [...prevState.data];
                                         data[data.indexOf(oldData)] = newData;
+                                        this.updateDatabase(newData);
                                         return Object.assign(prevState, { data });
                                     });
                                 }
