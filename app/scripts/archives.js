@@ -4,7 +4,7 @@ import TopNav from './topnav';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import { Router, Route, browserHistory } from 'react-router';
 import { API_URL, API_ARCHIVES_URL, SEASONS } from './global';
 import Tabs from '@material-ui/core/Tabs';
@@ -86,6 +86,9 @@ module.exports = createClass({
         if(this.state.currentSeason != "All Seasons") {
             relevantResults = relevantResults.filter(element => element.season == this.state.currentSeason)
         }
+        if(relevantResults === undefined || relevantResults.length == 0) {
+            return (<p> { "This is the current season, so these results are not archived yet" } </p>)
+        }
         // Sorts results by date and places the latest results at the top
         relevantResults.sort((a, b) => parseFloat(b.date) - parseFloat(a.date));
         return relevantResults.map(analysis => {
@@ -97,10 +100,10 @@ module.exports = createClass({
             return (<a key={key} onClick={clickFuntion}>
                 <Card className="racecard" raised={true} >
                     <CardContent>
-                        <Typography variant="headline" color="primary">
+                        <Typography variant="h5" color="primary">
                             {analysis.name}
                         </Typography>
-                        <Typography variant="title">
+                        <Typography variant="h6">
                             {analysis.meet} {analysis.event}
                         </Typography>
                         <Typography>

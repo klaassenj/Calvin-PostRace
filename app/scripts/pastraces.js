@@ -10,12 +10,22 @@ import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const knightTheme = createMuiTheme({
+    palette: {
+        primary: { main: "#800000", contrastText: "#000" },
+        secondary: { main: "#FFD700", contrastText: "#000" }
+    }
+});
 
 module.exports = createClass({
     getInitialState: function () {
-        return { analysis: [], _isMounted: false, selectedRace: null, 
+        return {
+            analysis: [], _isMounted: false, selectedRace: null,
             races: null, search: "", header: CURRENT_SEASON, emptyMessage: "Loading Races...",
-            groups: [ "All Athletes", "Distance", "Mid-Distance"], group: "All Athletes" };
+            groups: ["All Athletes", "Distance", "Mid-Distance"], group: "All Athletes"
+        };
     },
     componentDidMount: function () {
         this.state._isMounted = true;
@@ -32,8 +42,8 @@ module.exports = createClass({
             this.setState({ header: "Search Results" })
         }
     },
-    chooseGroup: function(group) {
-        this.setState({group: group});
+    chooseGroup: function (group) {
+        this.setState({ group: group });
     },
     loadAnalysisFromServer: function () {
         if (this.state._isMounted) {
@@ -43,15 +53,15 @@ module.exports = createClass({
                 cache: true
             })
                 .done(function (result) {
-                    if(!(result && result.length)) {
-                        this.setState({emptyMessage: "There doesn't seem to be any races yet this season..."})
+                    if (!(result && result.length)) {
+                        this.setState({ emptyMessage: "There doesn't seem to be any races yet this season..." })
                     }
                     this.setState({ analysis: result });
                     this.setState({ emptyMessage: "" });
                 }.bind(this))
                 .fail(function (xhr, status, errorThrown) {
                     console.error(API_URL, status, errorThrown.toString());
-                    this.setState({emptyMessage: "There was an error fetching the race data. Sorry. Check your internet settings, or submit a bug report."})
+                    this.setState({ emptyMessage: "There was an error fetching the race data. Sorry. Check your internet settings, or submit a bug report." })
                 }.bind(this));
         }
     },
@@ -107,16 +117,16 @@ module.exports = createClass({
             var thoughts = words.join(" ") + "...";
             return (
                 <a key={analysis.name + analysis.meet + Math.random(1000)} onClick={() => this.navigate(analysis)}>
-                    <Card className="racecard" raised= { true } >
+                    <Card className="racecard" raised={true} >
                         <CardContent>
-                            <Typography variant = "headline" color="primary">
+                            <Typography variant="h5" color="primary">
                                 {analysis.name}
                             </Typography>
-                            <Typography variant = "title">
+                            <Typography variant="h6">
                                 {analysis.meet} {analysis.event}
                             </Typography>
                             <Typography>
-                                { thoughts }
+                                {thoughts}
                             </Typography>
 
                         </CardContent>
@@ -126,6 +136,21 @@ module.exports = createClass({
 
         });
     },
+    createHeader: function () {
+        if (this.state.emptyMessage !== undefined || this.state.emptyMessage.isEmpty()) {
+            return (<div>
+                <Typography variant="h4" color="primary">
+                    {this.state.header}
+                </Typography>
+                <Typography variant="body1">
+                    {this.state.emptyMessage}
+                </Typography></div>);
+        }
+        return (
+            <Typography variant="h4" color="primary">
+                {this.state.header}
+            </Typography>);
+    },
     render: function () {
         this.state.races = this.createHTML();
         var Radios = this.state.groups.map(group => {
@@ -134,15 +159,18 @@ module.exports = createClass({
             );
         });
         var TabNav = (<Tabs
-                            value={this.state.group}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            variant="scrollable"
-                            scrollButtons="auto"
-                        >
-                        {Radios}
-                        </Tabs>
+            value={this.state.group}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+        >
+            {Radios}
+        </Tabs>
         );
+
+
+        var Header = this.createHeader();
         return (
             <div>
                 <h1>Current Season Race Analysis</h1>
@@ -156,8 +184,7 @@ module.exports = createClass({
                             onChange={this.handleSearchChange}
                         />
                     </div>
-                    <h3> {this.state.header} </h3>
-                    <p> { this.state.emptyMessage } </p>
+                    {Header}
                     <div id="racelist">
                         {this.state.races}
                     </div>
