@@ -1,5 +1,6 @@
 export const API_URL = "/api/races";
 export const API_ARCHIVES_URL = "/api/archives";
+export const API_RECORDS = "/api/records";
 export const API_BUGS_URL = "/api/bugs";
 export const POLL_INTERVAL = 2000;
 export const CURRENT_SEASON = "Indoor 2020";

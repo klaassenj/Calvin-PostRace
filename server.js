@@ -35,6 +35,8 @@ var sync = false;
 var recoverFromBackup = false;
 var dumpBackupToFile = false;
 var archive = false;
+var addSeasonTag = false;
+var addGroupTag = true;
 
 
 //Connect to Mongo Database
@@ -49,6 +51,8 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         if (archive) archiveRaces("XC 2019");
         if (recoverFromBackup) addFromBackup();
         if (dumpBackupToFile) displayCollection("races");
+        if(addSeasonTag) setSeason("Indoor 2020");
+        if(addGroupTag) setGroup("Distance");
     }
 });
 
@@ -73,6 +77,14 @@ app.get('/api/races', function (req, res) {
 // GET - /api/archives
 app.get('/api/archives', function (req, res) {
     var usernamesList = postraceDB.collection('archives').find({}).toArray((err, result) => {
+        if (err) throw err;
+        res.json(result);
+    });
+});
+
+// GET - /api/records
+app.get('/api/records', function (req, res) {
+    postraceDB.collection('records').find({}).toArray((err, result) => {
         if (err) throw err;
         res.json(result);
     });
@@ -109,7 +121,7 @@ app.post('/api/bugs', function (req, res, next) {
     postraceDB.collection('bugs').find({}).toArray((err, array) => {
         var duplicates = array.filter(item => item.name == req.body.name && item.bugdesc == req.body.bugdesc);
         if (duplicates.length > 0) {
-            postraceDB.collection('bugs').update(req.body);
+            postraceDB.collection('bugs').update(duplicates[0], req.body);
             res.statusCode = 200;
             res.send({ result: "Successful Update", body: req.body, dup: duplicates });
         } else {
@@ -119,6 +131,23 @@ app.post('/api/bugs', function (req, res, next) {
         }
     });
 });
+
+app.post('/api/records', function (req, res, next) {
+    postraceDB.collection('records').find({}).toArray((err, array) => {
+        var duplicates = array.filter(item => item.name == req.body.name);
+        if (duplicates.length > 0) {
+            delete req.body._id
+            postraceDB.collection('records').update(duplicates[0], req.body);
+            res.statusCode = 200;
+            res.send({ result: "Successful Update", body: req.body, dup: duplicates });
+        } else {
+            postraceDB.collection('records').insert(req.body);
+            res.statusCode = 200;
+            res.send({ result: "Successful Insert", body: req.body, dup: duplicates });
+        }
+    });
+});
+
 
 // Add Headers to responses
 app.use(function (req, res, next) {
@@ -161,7 +190,7 @@ function synchronizeBackup() {
 function setSeason(seasonName) {
     postraceDB.collection("races").find({}).toArray((err, array) => {
         if (err) {
-            console.warn("Recovery Failed...")
+            console.warn("Set Season Failed...")
             console.warn(err);
         } else {
             array.forEach(doc => {
@@ -171,6 +200,23 @@ function setSeason(seasonName) {
                 postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
             });
             console.log("Season set completed successfully.")
+        }
+    });
+}
+
+function setGroup(groupName) {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if (err) {
+            console.warn("Set Group Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                var file = doc;
+                delete file._id;
+                file.group = groupName;
+                postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
+            });
+            console.log("Group set completed successfully.")
         }
     });
 }

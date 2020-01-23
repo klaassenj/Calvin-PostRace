@@ -23,10 +23,10 @@ module.exports = createClass({
                 navItem: "Current",
                 route: "pastraces"
             },
-            // {
-            //     navItem: "PRs",
-            //     route: "records"
-            // },
+            {
+                navItem: "PRs",
+                route: "records"
+            },
             {
                 navItem: "Archives",
                 route: "archives"

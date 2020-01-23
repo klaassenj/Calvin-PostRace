@@ -211,3 +211,10 @@ input {
 .smallMargin {
   margin: 10px;
 }
+
+.noTouching {
+  padding: 25px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
