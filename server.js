@@ -8,11 +8,6 @@
  * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-
-
  */
 
 //Load Libraries
@@ -36,7 +31,7 @@ var recoverFromBackup = false;
 var dumpBackupToFile = false;
 var archive = false;
 var addSeasonTag = false;
-var addGroupTag = true;
+var addGroupTag = false;
 
 
 //Connect to Mongo Database
@@ -51,8 +46,8 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         if (archive) archiveRaces("XC 2019");
         if (recoverFromBackup) addFromBackup();
         if (dumpBackupToFile) displayCollection("races");
-        if(addSeasonTag) setSeason("Indoor 2020");
-        if(addGroupTag) setGroup("Distance");
+        if (addSeasonTag) setSeason("Indoor 2020");
+        if (addGroupTag) setGroup("Distance");
     }
 });
 

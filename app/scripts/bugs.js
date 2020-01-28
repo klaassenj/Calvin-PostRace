@@ -72,7 +72,7 @@ module.exports = createClass({
                                 </span>
                             </div>
         );
-        if (this.statte.submitted) {
+        if (this.state.submitted) {
             SubmitButton = (<div></div>);
         }
         return (
