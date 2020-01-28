@@ -11,6 +11,7 @@ import { Typography } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import RaceCard from "./racecard"
 
 const knightTheme = createMuiTheme({
     palette: {
@@ -106,34 +107,18 @@ module.exports = createClass({
                 return this.searchSuccessful(analysis);
             }
         });
+        if (this.state.group !== "All Athletes") {
+            relevantResults = relevantResults.filter(analysis => {
+                return analysis.group == this.state.group;
+            });
+        }
         // Sorts results by date and places the latest results at the top
         relevantResults.sort((a, b) => parseFloat(b.date) - parseFloat(a.date));
         relevantResults.forEach(result => {
             console.log(result.ID + "  " + result.date)
         });
         return relevantResults.map(analysis => {
-            var words = analysis.thoughts.substr(0, 40).split(" ");
-            words.pop();
-            var thoughts = words.join(" ") + "...";
-            return (
-                <a key={analysis.name + analysis.meet + Math.random(1000)} onClick={() => this.navigate(analysis)}>
-                    <Card className="racecard" raised={true} >
-                        <CardContent>
-                            <Typography variant="h5" color="primary">
-                                {analysis.name}
-                            </Typography>
-                            <Typography variant="h6">
-                                {analysis.meet} {analysis.event}
-                            </Typography>
-                            <Typography>
-                                {thoughts}
-                            </Typography>
-
-                        </CardContent>
-                    </Card>
-                </a>
-            );
-
+            return <RaceCard key={analysis.name+analysis.meet+analysis.date} analysis={analysis}/>
         });
     },
     createHeader: function () {
@@ -176,6 +161,7 @@ module.exports = createClass({
                 <h1>Current Season Race Analysis</h1>
                 <TopNav></TopNav>
                 <div className="container">
+                    {TabNav}
                     <div id="searchbar">
                         <input
                             id="name"
