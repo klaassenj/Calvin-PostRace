@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
-import { API_URL, POLL_INTERVAL, EVENTS, CURRENT_SEASON } from './global';
+import { API_URL, POLL_INTERVAL, EVENTS, CURRENT_SEASON, GROUPS } from './global';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -13,7 +13,7 @@ module.exports = createClass({
 
     getInitialState: function () {
         return { data: [], _isMounted: false, submitted: "", editing: false, ID: "", 
-        groups: [ "Distance", "Mid-Distance", "Other"], group: "Distance" };
+        groups: GROUPS, group: "Distance" };
     },
     componentDidMount: function () {
         this.state._isMounted = true;

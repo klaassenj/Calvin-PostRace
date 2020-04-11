@@ -32,6 +32,7 @@ var dumpBackupToFile = false;
 var archive = false;
 var addSeasonTag = false;
 var addGroupTag = false;
+var clearCurrentRaces = true;
 
 
 //Connect to Mongo Database
@@ -43,7 +44,8 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
-        if (archive) archiveRaces("XC 2019");
+        if (archive) archiveRaces("Indoor 2020");
+        if (clearCurrentRaces) clearCurrent();
         if (recoverFromBackup) addFromBackup();
         if (dumpBackupToFile) displayCollection("races");
         if (addSeasonTag) setSeason("Indoor 2020");
@@ -287,4 +289,13 @@ function findLatestSubmitDate() {
             console.log("The latest submit date is " + latestSubmit);
         }
     });
+}
+
+function clearCurrent() {
+    displayCollection("races")
+    console.log("This file contains a json of all analysis deleted if this was a mistake.")
+    postraceDB.collection("races").deleteMany({}).then(result => {
+        console.log()
+        console.log("Deleted all " + result.result.n + " analysis from current races")
+    })
 }

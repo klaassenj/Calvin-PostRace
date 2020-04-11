@@ -2,7 +2,7 @@
 import React from 'react';
 import $ from 'jquery';
 import TopNav from './topnav';
-import { API_URL, POLL_INTERVAL } from './global';
+import { API_URL, POLL_INTERVAL, GROUPS } from './global';
 var createClass = require('create-react-class');
 import { API_RECORDS } from "./global";
 import MaterialTable from "material-table";
@@ -44,22 +44,24 @@ const tableIcons = {
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-  };
+};
 
 
 module.exports = createClass({
     getInitialState: function () {
-        return { _isMounted: false,
+        return {
+            _isMounted: false,
             records: [],
             columns: [
                 { title: "Name", field: "name" },
                 { title: "1500m", field: "fifteen" },
-                { title: "Mile", field: "mile"},
-                { title: "3000m", field: "three"},
-                { title: "3k Steeple", field: "steeple"},
+                { title: "Mile", field: "mile" },
+                { title: "3000m", field: "three" },
+                { title: "3k Steeple", field: "steeple" },
                 { title: "5k", field: "five" },
                 { title: "10k", field: "ten" }
-            ] };
+            ]
+        };
     },
     componentDidMount: function () {
         console.log("Mounted");
@@ -68,6 +70,11 @@ module.exports = createClass({
     },
     componentWillUnmount: function () {
         this.state._isMounted = false;
+    },
+    getSquadOptions: function () {
+        return GROUPS.map(squad => {
+            return (<option key={squad} value={squad}> {squad} </option>)
+        });
     },
     loadPersonalRecords: function () {
         if (this.state._isMounted) {
@@ -94,8 +101,13 @@ module.exports = createClass({
                 <h1>Welcome to the PR Page!</h1>
                 <TopNav></TopNav>
                 <div className="container">
+                    <div className="noTouching">
+                        <select>
+                            {getSquadOptions()}
+                        </select>
+                    </div>
                     <div className="noTouching" style={{ maxWidth: "100%" }}>
-                        <PRTable columns={this.state.columns} data={this.state.records}/>
+                        <PRTable columns={this.state.columns} data={this.state.records} />
                     </div>
                 </div>
             </div>
