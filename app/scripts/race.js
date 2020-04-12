@@ -70,9 +70,9 @@ module.exports = createClass({
         return (
             <div>
                 <div className="container">
-                    <span>
-                        <button id="back" onClick={() => this.navigate("pastraces")}>Back</button>
-                        <button id="edit" onClick={this.editRace}>Edit</button>
+                    <span >
+                        <button className="navButton" onClick={() => this.navigate("pastraces")}>Back</button>
+                        <button className="navButton" onClick={this.editRace}>Edit</button>
                     </span>
                     {Header}
                     <div className="row">

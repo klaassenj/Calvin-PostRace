@@ -6,6 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import RaceCard from "./racecard"
 import $ from "jquery"
+import { RSA, Crypt } from 'hybrid-crypto-js'
+import { ENTROPY } from './global';
 
 module.exports = createClass({
     getInitialState: function () {
@@ -67,6 +69,49 @@ module.exports = createClass({
         );
     },
 
+    authenticate: function() {
+        const answer = prompt("Password for Admin Dashboard?")
+        let publicKey = undefined
+        $.ajax({
+            url: "/api/auth",
+            dataType: 'json',
+            cache: true
+        })
+            .done(function (result) {
+                console.log("Result from Auth Get")
+                console.log(result)
+                publicKey = result.rsa
+                let crypt = new Crypt({entropy: ENTROPY})
+                let encrypted = crypt.encrypt(answer, publicKey)
+                console.log("Successful Encryption!")
+                $.ajax({
+                    url: "/api/auth",
+                    type: "POST",
+                    dataType: "json",
+                    cache: false,
+                    data: {answer: encrypted}
+                }).done(function (result) {
+                    console.log("Result from Auth POST")
+                    console.log(result)
+                    if(result.success) {
+                        this.navigate(encrypted)
+                        console.log("Successful Login!")
+                    } else {
+                        console.log("Unsuccessful Login. Try again.")
+                    }
+                })
+            }.bind(this))
+            .fail(function (xhr, status, errorThrown) {
+                alert("That was not a valid password")
+                
+            }.bind(this));
+    },
+    navigate: function (route) {
+        browserHistory.push({
+            pathname: "/" + route,
+        });
+    },
+
     render: function () {
         var DevNews = this.createCard("Development News", (
             <div id="jsx"><p> <b> 1/24/2020 </b></p>
@@ -102,6 +147,7 @@ module.exports = createClass({
         return (
             <div>
                 <h1> Welcome to Calvin University Post Race Analysis! </h1>
+                <button id="adminButton" className="navButton" onClick={() => this.authenticate()}>{"Administrator"}</button>
                 <TopNav></TopNav>
                 <div className="wellSpaced"></div>
                 {Directions}

@@ -15,10 +15,19 @@ var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var RSA = require('hybrid-crypto-js').RSA;
+var Crypt = require('hybrid-crypto-js').Crypt;
+
+// Increase amount of entropy
+var entropy = 'Random string, integer or float';
+var crypt = new Crypt({ entropy: entropy });
+var rsa = new RSA({ entropy: entropy });
 
 // MongoDB variables
 var username = 'admin'
 var password = process.env.MONGO_PASSWORD
+var publicKey = process.env.ADMIN_RSA_PUBLIC_KEY
+var privateKey = process.env.ADMIN_RSA_PRIVATE_KEY
 var host = 'ds141815.mlab.com'
 var port = '41815'
 var database = 'calvinpostrace'
@@ -28,11 +37,11 @@ var mclient = require('mongodb').MongoClient
 // Maintenance Flags
 var sync = false;
 var recoverFromBackup = false;
-var dumpBackupToFile = false;
+var dumpBackupToFile = true;
 var archive = false;
 var addSeasonTag = false;
 var addGroupTag = false;
-var clearCurrentRaces = true;
+var clearCurrentRaces = false;
 
 
 //Connect to Mongo Database
@@ -45,9 +54,15 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
         if (archive) archiveRaces("Indoor 2020");
-        if (clearCurrentRaces) clearCurrent();
-        if (recoverFromBackup) addFromBackup();
         if (dumpBackupToFile) displayCollection("races");
+        if (clearCurrentRaces) {
+            await (async () => {
+                await synchronizeBackup();
+                await displayCollection();
+            })()
+            clearCurrent();
+        }
+        if (recoverFromBackup) addFromBackup();
         if (addSeasonTag) setSeason("Indoor 2020");
         if (addGroupTag) setGroup("Distance");
     }
@@ -86,6 +101,10 @@ app.get('/api/records', function (req, res) {
         res.json(result);
     });
 });
+
+app.get('/api/auth', function (req, res) {
+    res.json({rsa: publicKey})
+})
 
 // POST - /api/races/
 app.post('/api/races', function (req, res, next) {
@@ -144,6 +163,18 @@ app.post('/api/records', function (req, res, next) {
         }
     });
 });
+
+app.post('/api/auth', function(req, res, next) {
+    const answer = req.body.answer
+    var decrypted = crypt.decrypt(privateKey, answer)
+    if(decrypted == MONGO_PASSWORD) {
+        res.statusCode = 200
+        res.json({success:true})
+    } else {
+        res.statusCode = 401
+        res.json({success:false})
+    }
+})
 
 
 // Add Headers to responses
@@ -292,10 +323,11 @@ function findLatestSubmitDate() {
 }
 
 function clearCurrent() {
-    displayCollection("races")
     console.log("This file contains a json of all analysis deleted if this was a mistake.")
     postraceDB.collection("races").deleteMany({}).then(result => {
-        console.log()
-        console.log("Deleted all " + result.result.n + " analysis from current races")
+        
+        console.log("Deleted all analysis from current races")
     })
+
+    
 }

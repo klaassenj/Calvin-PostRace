@@ -174,7 +174,7 @@ input {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.submitbutton input, #edit, #back {
+.submitbutton input, .navButton {
   width: auto;
   background-color: #800000;
   color: #FFD700;
@@ -185,10 +185,13 @@ input {
   cursor: pointer;
 }
 
-#edit, #back {
+.navButton {
   border-radius: 15px;
 }
 
+#adminButton {
+  float: right;
+}
 .pt-3-half {
   padding-top: 1.4rem;
 }
