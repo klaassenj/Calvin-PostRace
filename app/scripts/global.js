@@ -4,6 +4,7 @@ export const API_RECORDS = "/api/records";
 export const API_BUGS_URL = "/api/bugs";
 export const POLL_INTERVAL = 2000;
 export const CURRENT_SEASON = "Corona 2020";
+export const ENTROPY = 'Random string, integer or float'
 
 export const SEASONS = [
     "All Seasons",
