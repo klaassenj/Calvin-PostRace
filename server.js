@@ -35,9 +35,9 @@ var postraceDB = null;
 var mclient = require('mongodb').MongoClient
 
 // Maintenance Flags
-var sync = false;
+var sync = true;
 var recoverFromBackup = false;
-var dumpBackupToFile = true;
+var dumpBackupToFile = false;
 var archive = false;
 var addSeasonTag = false;
 var addGroupTag = false;
@@ -54,7 +54,10 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
         if (archive) archiveRaces("Indoor 2020");
-        if (dumpBackupToFile) displayCollection("races");
+        if (dumpBackupToFile) {
+            displayCollection("races");
+            displayCollection("archives")
+        }
         if (clearCurrentRaces) {
             await (async () => {
                 await synchronizeBackup();
@@ -280,7 +283,6 @@ function archiveRaces(season) {
             
         }
     });
-    postraceDB.collection("races").deleteMany({});
 }
 
 function displayCollection(table) {
@@ -293,7 +295,7 @@ function displayCollection(table) {
 
                 delete doc._id;
             })
-            require('fs').writeFile("./dump.json", JSON.stringify(array), (err) => {
+            require('fs').writeFile("./"+table+".json", JSON.stringify(array), (err) => {
                 if (err) {
                     console.error(err);
                     return;
@@ -328,6 +330,4 @@ function clearCurrent() {
         
         console.log("Deleted all analysis from current races")
     })
-
-    
 }

@@ -67,6 +67,7 @@ module.exports = createClass({
         var Positives = this.createCard("Positives", this.state.positives);
         var Goal = this.createCard("Goal", this.state.goal);
         var AE = this.createCard("Attitude: " + this.state.attitude + "\n" + "Effort: " + this.state.effort, "")
+        var SubmitDate = this.createCard("Date Submitted: ", this.state.date)
         return (
             <div>
                 <div className="container">
@@ -79,6 +80,7 @@ module.exports = createClass({
                         <div className="column">
                             {Thoughts}
                             {TurnPoint}
+                            {SubmitDate}
                         </div>
                         <div className="column">
                             {Positives}

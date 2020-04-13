@@ -73,7 +73,7 @@ module.exports = createClass({
                             </div>
         );
         if (this.state.submitted) {
-            SubmitButton = (<div></div>);
+            SubmitButton = (<div><p id="submitted">{this.state.submitted}</p></div>);
         }
         return (
             <div>
