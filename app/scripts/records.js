@@ -96,16 +96,18 @@ module.exports = createClass({
     render: function () {
         console.log("Render records page")
         console.log(this.state);
+        var squadButton = (<div></div>)
+        // var squadButton = (<div className="noTouching">
+        //     <select>
+        //         {this.getSquadOptions()}
+        //     </select>
+        // </div>);
         return (
             <div>
                 <h1>Welcome to the PR Page!</h1>
                 <TopNav></TopNav>
                 <div className="container">
-                    <div className="noTouching">
-                        <select>
-                            {getSquadOptions()}
-                        </select>
-                    </div>
+                    { squadButton }
                     <div className="noTouching" style={{ maxWidth: "100%" }}>
                         <PRTable columns={this.state.columns} data={this.state.records} />
                     </div>

@@ -15,13 +15,13 @@ var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var RSA = require('hybrid-crypto-js').RSA;
-var Crypt = require('hybrid-crypto-js').Crypt;
+// var RSA = require('hybrid-crypto-js').RSA;
+// var Crypt = require('hybrid-crypto-js').Crypt;
 
 // Increase amount of entropy
-var entropy = 'Random string, integer or float';
-var crypt = new Crypt({ entropy: entropy });
-var rsa = new RSA({ entropy: entropy });
+// var entropy = 'Random string, integer or float';
+// var crypt = new Crypt({ entropy: entropy });
+// var rsa = new RSA({ entropy: entropy });
 
 // MongoDB variables
 var username = 'admin'
@@ -105,9 +105,9 @@ app.get('/api/records', function (req, res) {
     });
 });
 
-app.get('/api/auth', function (req, res) {
-    res.json({rsa: publicKey})
-})
+// app.get('/api/auth', function (req, res) {
+//     res.json({rsa: publicKey})
+// })
 
 // POST - /api/races/
 app.post('/api/races', function (req, res, next) {
@@ -167,17 +167,17 @@ app.post('/api/records', function (req, res, next) {
     });
 });
 
-app.post('/api/auth', function(req, res, next) {
-    const answer = req.body.answer
-    var decrypted = crypt.decrypt(privateKey, answer)
-    if(decrypted == MONGO_PASSWORD) {
-        res.statusCode = 200
-        res.json({success:true})
-    } else {
-        res.statusCode = 401
-        res.json({success:false})
-    }
-})
+// app.post('/api/auth', function(req, res, next) {
+//     const answer = req.body.answer
+//     var decrypted = crypt.decrypt(privateKey, answer)
+//     if(decrypted == MONGO_PASSWORD) {
+//         res.statusCode = 200
+//         res.json({success:true})
+//     } else {
+//         res.statusCode = 401
+//         res.json({success:false})
+//     }
+// })
 
 
 // Add Headers to responses
