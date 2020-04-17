@@ -4,7 +4,7 @@ import $ from 'jquery';
 import TopNav from './topnav';
 import { API_URL, POLL_INTERVAL, GROUPS } from './global';
 var createClass = require('create-react-class');
-import { API_RECORDS } from "./global";
+import { API_RECORDS, DISTANCE_RACES } from "./global";
 import MaterialTable from "material-table";
 import PRTable from "./table";
 
@@ -52,15 +52,8 @@ module.exports = createClass({
         return {
             _isMounted: false,
             records: [],
-            columns: [
-                { title: "Name", field: "name" },
-                { title: "1500m", field: "fifteen" },
-                { title: "Mile", field: "mile" },
-                { title: "3000m", field: "three" },
-                { title: "3k Steeple", field: "steeple" },
-                { title: "5k", field: "five" },
-                { title: "10k", field: "ten" }
-            ]
+            group: "Distance",
+            columns: DISTANCE_RACES
         };
     },
     componentDidMount: function () {
@@ -96,18 +89,11 @@ module.exports = createClass({
     render: function () {
         console.log("Render records page")
         console.log(this.state);
-        var squadButton = (<div></div>)
-        // var squadButton = (<div className="noTouching">
-        //     <select>
-        //         {this.getSquadOptions()}
-        //     </select>
-        // </div>);
         return (
             <div>
                 <h1>Welcome to the PR Page!</h1>
                 <TopNav></TopNav>
                 <div className="container">
-                    { squadButton }
                     <div className="noTouching" style={{ maxWidth: "100%" }}>
                         <PRTable columns={this.state.columns} data={this.state.records} />
                     </div>

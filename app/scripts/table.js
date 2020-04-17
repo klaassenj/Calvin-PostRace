@@ -53,6 +53,7 @@ module.exports = createClass({
                 title={this.state.title}
                 columns={this.state.columns}
                 data={this.state.data}
+                options={{paging:false}}
                 editable={{
                     onRowAdd: newData =>
                         new Promise(resolve => {

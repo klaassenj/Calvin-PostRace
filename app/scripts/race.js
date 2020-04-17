@@ -49,7 +49,7 @@ module.exports = createClass({
         return (
             <Card className="racecard wellSpaced" raised={true} >
                 <CardContent>
-                    <Typography className="smallMargin" variant="title">
+                    <Typography className="smallMargin" variant="h5">
                         {title}
                     </Typography>
                     <Typography>

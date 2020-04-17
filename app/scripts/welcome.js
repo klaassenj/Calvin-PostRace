@@ -5,9 +5,10 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import RaceCard from "./racecard"
+import { Router, Route, browserHistory } from 'react-router';
 import $ from "jquery"
 // import { RSA, Crypt } from 'hybrid-crypto-js'
-import { ENTROPY } from './global';
+import { ENTROPY, API_ARCHIVES_URL } from './global';
 
 module.exports = createClass({
     getInitialState: function () {
@@ -32,7 +33,7 @@ module.exports = createClass({
     loadFeaturedRace: function () {
         if (this.state._isMounted) {
             $.ajax({
-                url: "/api/races",
+                url: API_ARCHIVES_URL,
                 dataType: 'json',
                 cache: true
             })
@@ -44,11 +45,11 @@ module.exports = createClass({
                         possibleFeatures: result.filter(analysis => {
                             return analysis.attitude >= 8 && analysis.effort >= 8
                         })
-                    });
-                    this.setState({ featuredRace: possibleFeatures.random() })
+                    })
+                    this.setState({ featuredRace: this.state.possibleFeatures.random() })
                 }.bind(this))
                 .fail(function (xhr, status, errorThrown) {
-                    console.error(API_URL, status, errorThrown.toString());
+                    console.error(API_ARCHIVES_URL, status, errorThrown.toString());
                     this.setState({ emptyMessage: "There was an error fetching the race data. Sorry. Check your internet settings, or submit a bug report." })
                 }.bind(this));
         }
@@ -61,7 +62,7 @@ module.exports = createClass({
                     <Typography className="smallMargin" variant="h5">
                         {title}
                     </Typography>
-                    <Typography>
+                    <Typography component='span'>
                         {text}
                     </Typography>
                 </CardContent>
@@ -106,15 +107,23 @@ module.exports = createClass({
                 
     //         }.bind(this));
     // },
-    navigate: function (route) {
+    navigate: function (route, params) {
+        if(params === undefined) {
+            params = {}
+        }
         browserHistory.push({
             pathname: "/" + route,
+            state: {parameters:params}
         });
     },
 
     render: function () {
         var DevNews = this.createCard("Development News", (
-            <div id="jsx"><p> <b> 1/24/2020 </b></p>
+            <div id="jsx">
+                <p> <b> 4/12/2020 </b> </p>
+                <p> Switching to this weird season of non-official training/racing</p>
+                <p> Development started on Administrator dashboard</p>
+                <p> <b> 1/24/2020 </b></p>
                 <p> Adding Mid-Distance Differentiation. Added the PR Table. </p>
                 <p> <b> 1/8/2020 </b></p>
                 <p> Switching into indoor season. Some backend changes. </p>
@@ -140,21 +149,22 @@ module.exports = createClass({
             FeaturedRace = (<div></div>);
         } else {
             var FeaturedRace = (<div className="welcomeCard">
-                <h4> Featured Race</h4>
+                <h2> Featured Race</h2>
                 <RaceCard analysis={this.state.featuredRace} />
             </div>);
         }
-        var AdminButton = <div></div>
-        // var AdminButton = (<button id="adminButton" className="navButton" onClick={() => this.authenticate()}>{"Administrator"}</button>)
+        
+        var AdminButton = (<button id="adminButton" className="navButton" onClick={() => this.navigate("admin")}>{"Administrator"}</button>)
         return (
-            <div>
-                <h1> Welcome to Calvin University Post Race Analysis! </h1>
+            <div className="welcomePage">
                 { AdminButton }
+                <h1> Welcome to Calvin University Post Race Analysis! </h1>
                 <TopNav></TopNav>
-                <div className="wellSpaced"></div>
-                {Directions}
-                {FeaturedRace}
-                {DevNews}
+                <div className="wellSpaced">
+                    {FeaturedRace}
+                    {Directions}                    
+                    {DevNews}
+                </div>
             </div>
         );
     }
