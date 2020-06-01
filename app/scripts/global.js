@@ -3,18 +3,25 @@ export const API_ARCHIVES_URL = "/api/archives";
 export const API_ADMIN_URL = "/api/admin";
 export const API_RECORDS = "/api/records";
 export const API_BUGS_URL = "/api/bugs";
+export const API_SEASON = "/api/season"
+export const API_RESTORE = "/api/restore"
 export const POLL_INTERVAL = 2000;
 export const CURRENT_SEASON = "Corona 2020";
 export const ENTROPY = 'Random string, integer or float'
-
-export const Maintainers = [
+export const MLAB_LINK = "https://mlab.com/databases/calvinpostrace"
+export const MAINTAINERS = [
     {
-        name:"Jason Klaassen",
+        name:"Jason Klaassen - Original Author",
         year:"2020",
         phone:"616-337-5097"
     },
     {
         name:"Charlie Kornoelje",
+        year:"2021",
+        phone:"000-000-0000"
+    },
+    {
+        name:"Jonathan Ellis",
         year:"2021",
         phone:"000-000-0000"
     },

@@ -53,6 +53,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         postraceDB = client.db(database);
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
+        if (archive) archiveRaces("Indoor 2020");
         if (dumpBackupToFile) {
             displayCollection("races");
             displayCollection("archives")
@@ -178,26 +179,6 @@ app.post('/api/records', function (req, res, next) {
 //     }
 // })
 
-app.post('/api/season', function(req, res, next) {
-    const seasonName = req.body.newSeason
-    const process = new Promise((resolve, reject) => {
-        resolve()
-    });
-    process
-    .then(() => console.log("Starting Synchronizer."))
-    .then(() => synchronizeBackup())
-    .then(() => console.log("Sync Complete. Starting Archiver."))
-    .then(() => archiveRaces()) 
-    .then(() => console.log("Archive Complete. Starting Clear."))
-    .then(() => clearCurrentRaces())
-    .then(() => console.log("Clear Complete. Season Switch Complete."))
-    .catch(() => console.log("Error! Archive Interrupted and Incomplete. Try again."))  
-})
-
-app.post('/api/season', function(req,res,next) {
-    const seasonName = req.body.season
-    addFromBackup()
-});
 
 // Add Headers to responses
 app.use(function (req, res, next) {
@@ -237,33 +218,47 @@ function synchronizeBackup() {
     });
 };
 
-// function setSeason(seasonName) {
-//     postraceDB.collection("races").find({}).toArray((err, array) => {
-//         if (err) {
-//             console.warn("Set Season Failed...")
-//             console.warn(err);
-//         } else {
-//             array.forEach(doc => {
-//                 var file = doc;
-//                 delete file._id;
-//                 file.season = seasonName;
-//                 postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
-//             });
-//             console.log("Season set completed successfully.")
-//         }
-//     });
-// }
+function setSeason(seasonName) {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if (err) {
+            console.warn("Set Season Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                var file = doc;
+                delete file._id;
+                file.season = seasonName;
+                postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
+            });
+            console.log("Season set completed successfully.")
+        }
+    });
+}
 
+function setGroup(groupName) {
+    postraceDB.collection("races").find({}).toArray((err, array) => {
+        if (err) {
+            console.warn("Set Group Failed...")
+            console.warn(err);
+        } else {
+            array.forEach(doc => {
+                var file = doc;
+                delete file._id;
+                file.group = groupName;
+                postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
+            });
+            console.log("Group set completed successfully.")
+        }
+    });
+}
 
-function addFromBackup(season) {
+function addFromBackup() {
     postraceDB.collection("backup-races").find({}).toArray((err, array) => {
         if (err) {
             console.warn("Recovery Failed...")
             console.warn(err);
         } else {
-            array
-            .filter(doc => doc.season == season)
-            .forEach(doc => {
+            array.forEach(doc => {
                 var backupFile = doc;
                 delete backupFile._id;
                 postraceDB.collection("races").update({ ID: doc.ID }, backupFile, { upsert: true });

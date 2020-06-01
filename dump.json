@@ -1,0 +1,35 @@
+[
+    {
+        "ID": "Jason KlaassenUBH Invitational1586715583153",
+        "name": "Jason Klaassen",
+        "meet": "UBH Invitational",
+        "event": "1500m",
+        "group": "Distance",
+        "thoughts": "Ran 4:18 (4:37 mile). Got out well in 65 right behind Addy and Ty. Then the next lap still felt pretty hard, but Addy and I ran a fucking 72. Changed gears pretty hard and tried to catch Ty. Still ran pretty slow for the last 700m despite feeling like I was really hauling.",
+        "positives": "Confident and smooth and relaxed early.\nResponded well and stayed engaged on the second half extremely well.\n\nI should have moved up a lot earlier when I started to feel a little too good in the second lap.",
+        "goal": "Well the goal was sub4:10, but given Ty ran 4:16 I think this was a really good effort for me. First time beating Addy since our first race ever together. I'm in really good shape right now",
+        "turnpoint": "2:17 at 800 - Change gears and compete\n3:10 at 400m to go - Try to catch Ty",
+        "attitude": "9",
+        "effort": "9",
+        "date": "1586715599761",
+        "season": "Corona 2020"
+    },
+    {
+        "_id": {
+            "$oid": "5e93b1e70768c2001708657f"
+        },
+        "ID": "TommyTime trial1586737639428",
+        "name": "Tommy",
+        "meet": "Time trial",
+        "event": "1500m",
+        "group": "Distance",
+        "thoughts": "It went alright, for no race conditions/inhaler I felt like I gave it a really good effort. (4:36)",
+        "positives": "My legs felt really good and I definitely felt like I gave a good effort, however I have realized how important my inhaler is now haha.",
+        "goal": "Yeah I kinda expected to run at least sub 4:40-4:30 range. For a first time trial back home I was exactly where I was expecting to land so next time I can go faster",
+        "turnpoint": "My friend shouted at me to quite slacking in the middle of the race that certainly helped.",
+        "attitude": "7",
+        "effort": "8",
+        "date": "1586737639428",
+        "season": "Corona 2020"
+    }
+]
