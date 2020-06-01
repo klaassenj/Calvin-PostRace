@@ -28,6 +28,7 @@ var username = 'admin'
 var password = process.env.MONGO_PASSWORD
 var publicKey = process.env.ADMIN_RSA_PUBLIC_KEY
 var privateKey = process.env.ADMIN_RSA_PRIVATE_KEY
+var RACES_DATABASE = process.env.DATABASE
 var host = 'ds141815.mlab.com'
 var port = '41815'
 var database = 'calvinpostrace'
@@ -54,7 +55,7 @@ mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`,
         console.log("Connected Successfully to MongoDB.")
         if (sync) synchronizeBackup();
         if (dumpBackupToFile) {
-            displayCollection("races");
+            displayCollection(RACES_DATABASE);
             displayCollection("archives")
         }
         if (clearCurrentRaces) {
@@ -82,7 +83,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // GET - /api/races/
 app.get('/api/races', function (req, res) {
-    var usernamesList = postraceDB.collection('races').find({}).toArray((err, result) => {
+    var usernamesList = postraceDB.collection(RACES_DATABASE).find({}).toArray((err, result) => {
         if (err) throw err;
         res.json(result);
     });
@@ -110,15 +111,15 @@ app.get('/api/records', function (req, res) {
 
 // POST - /api/races/
 app.post('/api/races', function (req, res, next) {
-    postraceDB.collection('races').find({}).toArray((err, array) => {
+    postraceDB.collection(RACES_DATABASE).find({}).toArray((err, array) => {
         var duplicates = array.filter(item => item.ID == req.body.ID);
         if (duplicates.length > 0) {
 
-            postraceDB.collection('races').update(duplicates[0], req.body);
+            postraceDB.collection(RACES_DATABASE).update(duplicates[0], req.body);
             res.statusCode = 200;
             res.send({ result: "Successful Update", body: req.body, dup: duplicates });
         } else {
-            postraceDB.collection('races').insert(req.body);
+            postraceDB.collection(RACES_DATABASE).insert(req.body);
             res.statusCode = 200;
             res.send({ result: "Successful Insert", body: req.body, dup: duplicates });
         }
@@ -128,7 +129,7 @@ app.post('/api/races', function (req, res, next) {
 // // DELETE - /api/races
 // app.delete('/api/races', function (req, res, next) {
 //     try {
-//         postraceDB.collection('races').delete(req.body);
+//         postraceDB.collection(RACES_DATABASE).delete(req.body);
 //     } catch (e) {
 //         console.warn(e);
 //     }
@@ -189,7 +190,7 @@ app.post('/api/season', function(req, res, next) {
     .then(() => console.log("Sync Complete. Starting Archiver."))
     .then(() => archiveRaces()) 
     .then(() => console.log("Archive Complete. Starting Clear."))
-    .then(() => clearCurrentRaces())
+    .then(() => clearCurrent())
     .then(() => console.log("Clear Complete. Season Switch Complete."))
     .catch(() => console.log("Error! Archive Interrupted and Incomplete. Try again."))  
 })
@@ -222,7 +223,7 @@ app.listen(app.get('port'), function () {
 /////////////////////////////////
 
 function synchronizeBackup() {
-    postraceDB.collection("races").find({}).toArray((err, array) => {
+    postraceDB.collection(RACES_DATABASE).find({}).toArray((err, array) => {
         if (err) {
             console.warn("Backup Failed...")
             console.warn(err);
@@ -238,7 +239,7 @@ function synchronizeBackup() {
 };
 
 // function setSeason(seasonName) {
-//     postraceDB.collection("races").find({}).toArray((err, array) => {
+//     postraceDB.collection(RACES_DATABASE).find({}).toArray((err, array) => {
 //         if (err) {
 //             console.warn("Set Season Failed...")
 //             console.warn(err);
@@ -247,7 +248,7 @@ function synchronizeBackup() {
 //                 var file = doc;
 //                 delete file._id;
 //                 file.season = seasonName;
-//                 postraceDB.collection("races").update({ ID: doc.ID }, file, { upsert: true });
+//                 postraceDB.collection(RACES_DATABASE).update({ ID: doc.ID }, file, { upsert: true });
 //             });
 //             console.log("Season set completed successfully.")
 //         }
@@ -266,7 +267,7 @@ function addFromBackup(season) {
             .forEach(doc => {
                 var backupFile = doc;
                 delete backupFile._id;
-                postraceDB.collection("races").update({ ID: doc.ID }, backupFile, { upsert: true });
+                postraceDB.collection(RACES_DATABASE).update({ ID: doc.ID }, backupFile, { upsert: true });
             });
             console.log("Recovery completed successfully.")
         }
@@ -275,7 +276,7 @@ function addFromBackup(season) {
 
 function archiveRaces(season) {
     setSeason(season);
-    postraceDB.collection("races").find({}).toArray((err, array) => {
+    postraceDB.collection(RACES_DATABASE).find({}).toArray((err, array) => {
         if (err) {
             console.warn("Archive Failed...")
             console.warn(err);
@@ -313,7 +314,7 @@ function displayCollection(table) {
 }
 
 function findLatestSubmitDate() {
-    postraceDB.collection("races").find({}).toArray((err, array) => {
+    postraceDB.collection(RACES_DATABASE).find({}).toArray((err, array) => {
         if(err) {
             console.warn("Display Failed...")
             console.warn(err);
@@ -331,7 +332,7 @@ function findLatestSubmitDate() {
 
 function clearCurrent() {
     console.log("This file contains a json of all analysis deleted if this was a mistake.")
-    postraceDB.collection("races").deleteMany({}).then(result => {
+    postraceDB.collection(RACES_DATABASE).deleteMany({}).then(result => {
         
         console.log("Deleted all analysis from current races")
     })
