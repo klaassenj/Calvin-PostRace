@@ -117,11 +117,11 @@ module.exports = createClass({
         return true
     },
     maintainersToString: function (persons) {
-        var result = ""
+        var buttonText = "If things have poorly. Here is the list of everyone who may know how to fix it."
         var ptags = persons.map(person => {
-            return (<p> { person.name + " " + person.year + "―――" + person.phone }<hr></hr> </p>)
+            return (<div><p> { person.name + " " + person.year + "\n" + person.phone }</p><hr></hr></div>)
         })
-        return (<div className="wellSpaced">{"If things have poorly. Here is the list of everyone who may know how to fix it."}{ ptags } </div>)
+        return (<div className="wellSpaced">{buttonText}{ ptags } </div>)
     },
 
     render: function () {
