@@ -120,6 +120,9 @@ module.exports = createClass({
     render: function () {
         var DevNews = this.createCard("Development News", (
             <div id="jsx">
+                <p> <b> 6/2/2020</b></p>
+                <p> Added Featured Race on the Home Screen</p>
+                <p> Administrator Dashboard Prototype Complete</p>
                 <p> <b> 4/12/2020 </b> </p>
                 <p> Switching to this weird season of non-official training/racing</p>
                 <p> Development started on Administrator dashboard</p>

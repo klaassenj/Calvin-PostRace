@@ -126,15 +126,6 @@ app.post('/api/races', function (req, res, next) {
     });
 });
 
-// // DELETE - /api/races
-// app.delete('/api/races', function (req, res, next) {
-//     try {
-//         postraceDB.collection(RACES_DATABASE).delete(req.body);
-//     } catch (e) {
-//         console.warn(e);
-//     }
-// });
-
 // POST - /api/bugs
 app.post('/api/bugs', function (req, res, next) {
     postraceDB.collection('bugs').find({}).toArray((err, array) => {
@@ -195,9 +186,9 @@ app.post('/api/season', function(req, res, next) {
     .catch(() => console.log("Error! Archive Interrupted and Incomplete. Try again."))  
 })
 
-app.post('/api/season', function(req,res,next) {
+app.post('/api/restore', function(req,res,next) {
     const seasonName = req.body.season
-    addFromBackup()
+    addFromBackup(seasonName)
 });
 
 // Add Headers to responses

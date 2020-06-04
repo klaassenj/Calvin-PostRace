@@ -6,7 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
 import { Router, Route, browserHistory } from 'react-router';
 var createClass = require('create-react-class');
-import { API_URL, POLL_INTERVAL, MAINTAINERS, MLAB_LINK, API_SEASON, API_RESTORE } from './global';
+import { API_URL, POLL_INTERVAL, MAINTAINERS, MLAB_LINK, API_SEASON, API_RESTORE,CURRENT_SEASON } from './global';
 
 module.exports = createClass({
     getInitialState: function () {
@@ -25,20 +25,23 @@ module.exports = createClass({
     },
     restoreFromBackUp: function () {
         var response = confirm("You really messed up and hope that the backup is up to date?");
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: {season: CURRENT_SEASON}
-        })
-        .done(function (result) {
-            console.log("Backup successfully restored to Current Races")
-            console.log("Check to ensure that the races have been saved.")
-            console.log(result);
-        }.bind(this))
-        .fail(function (xhr, status, errorThrown) {
-            console.error(API_RESTORE, status, errorThrown.toString());
-            this.setState({ submitted: "Restore Failed. Try again with a better connection." });
-        }.bind(this));
+        if(response) {
+            $.ajax({
+                url:API_RESTORE,
+                type: "POST",
+                dataType: "json",
+                data: {season: CURRENT_SEASON}
+            })
+            .done(function (result) {
+                console.log("Backup successfully restored to Current Races")
+                console.log("Check to ensure that the races have been saved.")
+                console.log(result);
+            }.bind(this))
+            .fail(function (xhr, status, errorThrown) {
+                console.error(API_RESTORE, status, errorThrown.toString());
+                this.setState({ submitted: "Restore Failed. Try again with a better connection." });
+            }.bind(this));
+        }
     },
     handleSeasonNameChange: function(e) {
         this.setState({newSeason: e.target.value})
@@ -73,7 +76,7 @@ module.exports = createClass({
         }
     },
 
-    createCard: function (title, text) {
+    createCard: function (title, text, extra=(<div></div>)) {
         return (
                 <Card className="racecard wellSpaced" raised={true} >
                     <CardContent>
@@ -83,6 +86,7 @@ module.exports = createClass({
                         <Typography component="span">
                             {text}
                         </Typography>
+                        {extra}
                     </CardContent>
                 </Card>
         );
@@ -119,7 +123,7 @@ module.exports = createClass({
     maintainersToString: function (persons) {
         var buttonText = "If things have poorly. Here is the list of everyone who may know how to fix it."
         var ptags = persons.map(person => {
-            return (<div><p> { person.name + " " + person.year + "\n" + person.phone }</p><hr></hr></div>)
+            return (<div key={person.name}><p> { person.name + " " + person.year + "\n" + person.phone }</p><hr></hr></div>)
         })
         return (<div className="wellSpaced">{buttonText}{ ptags } </div>)
     },
@@ -127,8 +131,11 @@ module.exports = createClass({
     render: function () {
         
         var launchNewSeason = this.createNewSeasonForm();
-        var mlab = (<a onClick={() => window.open(MLAB_LINK)}>{this.createCard("mLab", "To view all data collections, go to this link and sign in.")}</a>)
-        var messUpButton = (<a onClick={() => this.restoreFromBackUp}>{this.createCard("Oh Shit all of the current races got deleted button.", "This will restore all current season analysis to the current races collection.")}</a>)
+        var mlab = (<a onClick={() => window.open(MLAB_LINK)}>{this.createCard("mLab", "To view and manually edit/delete the data collections, go to this link and sign in.")}</a>)
+        var messUpTitle = "Oh Shit all of the current races got deleted button."
+        var messUpText = "This will restore all current season analysis to the current races collection."
+        var clicker = (<button className="navbutton" onClick={this.restoreFromBackUp}>{"Restore"}</button>)
+        var messUpButton = this.createCard(messUpTitle, messUpText, clicker)
         var Maintain = this.createCard("Maintainers", this.maintainersToString(this.state.maintainers))
         var Page = (<div>
             <h1>Admin Page</h1>
