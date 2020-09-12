@@ -45,7 +45,7 @@ var clearCurrentRaces = false;
 
 
 //Connect to Mongo Database
-mclient.connect(`mongodb://${username}:${password}@${host}:${port}/${database}`, function (err, client) {
+mclient.connect(`mongodb+srv://admin:${password}@calvinpostrace.k1skl.mongodb.net/calvinpostrace?retryWrites=true&w=majority`, function (err, client) {
     if (err) {
         console.warn(err)
         console.warn("Continuing Deployment without Database Access...")
